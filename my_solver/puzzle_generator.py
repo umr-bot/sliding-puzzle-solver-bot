@@ -1,6 +1,6 @@
- ### Basic NxN sliding puzzle solver 
-import numpy as np 
+import numpy as np
 
+## Create an NxN sliding puzzle grid filled with randomly shuffled numbers
 class puzzle(): 
  
     def __init__(self,N=4):
@@ -22,7 +22,7 @@ class puzzle():
                 flag = 0
             else: print("Not allowed to move up")
         if(c == 'down'):
-            if(self.blank_index+1) <= self.N*(self.N-1) and self.blank_index+1 > self.N:
+            if(self.blank_index+1) <= self.N*(self.N-1):
                 i = self.blank_index + self.N
                 flag = 0
             else: print("Not allowed to move down")

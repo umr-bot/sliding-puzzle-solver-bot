@@ -1,3 +1,4 @@
+#from https://stackoverflow.com/questions/22397289/finding-the-values-of-the-arrow-keys-in-python-why-are-they-triples
 import sys,tty,termios
 class _Getch:
     def __call__(self):
@@ -16,15 +17,17 @@ def get():
                 k=inkey()
                 if k!='':break
         if k=='\x1b[A':
-                print "up"
+                print ("up")
         elif k=='\x1b[B':
-                print "down"
+                print ("down")
         elif k=='\x1b[C':
-                print "right"
+                print ("right")
         elif k=='\x1b[D':
-                print "left"
+                print ("left")
+        elif k=='\x27':
+                return
         else:
-                print "not an arrow key!"
+                print ("not an arrow key!")
 
 def main():
         for i in range(0,20):
