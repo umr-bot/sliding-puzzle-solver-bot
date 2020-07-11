@@ -7,14 +7,16 @@ import tkinter as tk
 from PIL import ImageTk, Image
 
 puz = puzzle()
+puz.generate_puzzle()
+up,down,left,right = 0,1,2,3
 # function to be called when 
 # keyboard buttons are pressed 
 def key_press(event): 
     key = event.char
-    if(key == 'w'): puz.transpose('up')
-    if(key == 's'): puz.transpose('down')
-    if(key == 'a'): puz.transpose('left')
-    if(key == 'd'): puz.transpose('right')
+    if(key == 'w'): puz.transpose(up)
+    if(key == 's'): puz.transpose(down)
+    if(key == 'a'): puz.transpose(left)
+    if(key == 'd'): puz.transpose(right)
     if(key == 'q'): 
         root.destroy()
         return # return to after root.mainloop() if successfully exited
