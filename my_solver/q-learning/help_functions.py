@@ -1,9 +1,9 @@
 import numpy as np
 
 # Calculates total reward associated with making a singular action
-def calc_reward():
+def calc_reward(s):
     sn = np.arange(1,17,1)  #blank block is the value 16 in this array representing
-    s = np.array([5,1,2,3,13,6,7,4,16,15,10,8,14,11,12,9]) # start state
+    #s = np.array([5,1,2,3,13,6,7,4,16,15,10,8,14,11,12,9]) # start state
     tot_reward = 0 # make reward directly the sum of the taxi_distances
     j=0 # j is the y value the board with origin at left bottom corner
     #s = np.array([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16])
@@ -51,6 +51,6 @@ def transpose(blocks, move=0,N=4):
 
         blank_index = np.where(blocks == (size))[0][0]
         if debug == 0: print("blank is moved to position", blank_index+1)
-        return 0 # returning 0 indicates a valid move has been made
-    else: return 1 # returning 1 indicates an invalid move
+        return 0,blocks # returning 0 indicates a valid move has been made
+    else: return 1,blocks # returning 1 indicates an invalid move
 
