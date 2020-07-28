@@ -1,0 +1,24 @@
+# Grid world with final state in first block
+
+### Value iteration (planning)
+initialize reward and proboabilty state matrices R and P
+	can use for loop here
+
+for every state (ie. a state is a block):
+	calculate the matrix multiplication using value iterations formula
+	if we in final state
+		reward of 100 or 10, arbritarily
+	check if the value has converged
+		reward zero
+		break out for loop
+		technically we keep rewarding zero after this, but thats implicitly described
+
+### Q-learning (learning)
+same as above for value iteration except that where we checked for convergence
+there we now check to see if we a final state using an if statement such as 
+current_state == final_state
+
+# 4 piece sliding puzzle
+### Value iteration
+use same method as for grid world except every state is now a grid of 4 blocks.
+So instead of looping through every block we loop through every set of bloks and still do matrix multiplication of reward and probility matrices. Only now the state action space of the reward matrix is much larger for N large
