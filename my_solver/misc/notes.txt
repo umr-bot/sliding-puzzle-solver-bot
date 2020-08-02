@@ -1,3 +1,8 @@
+Latatest notes 2 Aug Sunday 2020
+Implement gamma into value function loop next time
+
+Old notes:
+
 # Grid world with final state in first block
 
 ### Value iteration (planning)
@@ -8,10 +13,10 @@ for every state (ie. a state is a block):
 	calculate the matrix multiplication using value iterations formula
 	if we in final state
 		reward of 100 or 10, arbritarily
-	check if the value has converged
-		reward zero
-		break out for loop
-		technically we keep rewarding zero after this, but thats implicitly described
+	--OR check if the value has converged
+	--	reward zero
+	--	break out for loop
+	--	technically we keep rewarding zero after this, but thats implicitly described
 
 ### Q-learning (learning)
 same as above for value iteration except that where we checked for convergence

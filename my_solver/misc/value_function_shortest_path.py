@@ -28,16 +28,21 @@ print("up action probibility matrix\n",P[0])
 print("down action probibility matrix\n",P[1])
 print("left action probibility matrix\n",P[2])
 print("right action probibility matrix\n",P[3])
-
-#for i in range(len(s)*len(s)): # loop through all blocks in state
-    
-### initialize code that doesnt work properly yet
-#R = np.zeros((len(a),s.shape[0],s.shape[1])) 
-#for i in range(len(a)): 
-#    for j in range(s.shape[0]): 
-#        for k in range(s.shape[1]): 
-#            R[a][j][k] = -1 
-#            print(R[a][j][k]) 
+v = np.zeros(16) # initial value function value
+v = v.reshape(4,4)
+v_kplus1 = np.ones(16)
+v_kplus1 = v_kplus1.reshape(4,4)
+k = 0
+diff = 10
+while diff > 0.2 and k<10: # loop through all blocks in grid
+    a = np.random.randint(4) #random action, up, down, left or right
+    v = v_kplus1 # old v value at iteration k
+    v_kplus1 = R[a] + P[a]*v_kplus1
+    diff = np.linalg.norm(v_kplus1-v)
+    k += 1
+    #print("v:\n",v)
+    #print("v_kplus1:\n",v_kplus1)
+    print(diff)
 
 #def check_max_neighbour_blocks(s,block_index):
 #    max_val = -1000000
