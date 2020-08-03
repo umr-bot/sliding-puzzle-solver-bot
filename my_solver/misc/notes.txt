@@ -1,7 +1,11 @@
-Latatest notes 2 Aug Sunday 2020
+3 Aug Monday 2020
+Probability matrix probably not correct, which is causing final value to be off
+
+2 Aug Sunday 2020
+
 Implement gamma into value function loop next time
 
-Old notes:
+cant remember date for this one:
 
 # Grid world with final state in first block
 

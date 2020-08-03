@@ -34,15 +34,17 @@ v_kplus1 = np.ones(16)
 v_kplus1 = v_kplus1.reshape(4,4)
 k = 0
 diff = 10
-while diff > 0.2 and k<10: # loop through all blocks in grid
-    a = np.random.randint(4) #random action, up, down, left or right
-    v = v_kplus1 # old v value at iteration k
-    v_kplus1 = R[a] + P[a]*v_kplus1
-    diff = np.linalg.norm(v_kplus1-v)
-    k += 1
-    #print("v:\n",v)
-    #print("v_kplus1:\n",v_kplus1)
-    print(diff)
+#gamma = np.array([[0.5,0.5**2,0.5**3,0.5**4]]) # discount factor
+#gamma = 0.5
+#while diff > 0.001 and k<10000000: # loop through all blocks in grid
+#    a = np.random.randint(4) #random action, up, down, left or right
+#    v = v_kplus1 # old v value at iteration k
+#    v_kplus1 = R[a] + (gamma*P[a]*v_kplus1)
+#    diff = np.linalg.norm(v_kplus1-v)
+#    k += 1
+#    #print("v:\n",v)
+#    #print("v_kplus1:\n",v_kplus1)
+#    #print(diff)
 
 #def check_max_neighbour_blocks(s,block_index):
 #    max_val = -1000000
