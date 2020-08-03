@@ -44,11 +44,13 @@ for i in range(P.shape[0]):
 #print("down action probibility matrix\n",P[1])
 #print("left action probibility matrix\n",P[2])
 #print("right action probibility matrix\n",P[3])
-p = P.reshape(4,16)
-r = R.reshape(4,16)
-v = np.zeros(16) # initial value function value
+p = P.reshape(N,N**2)
+r = R.reshape(N,N**2)
+for i in range(N): 
+    r[i][0] = 0 # set all rewards @ index 0 for all actions to zero
+v = np.zeros(N**2) # initial value function value
 #v = v.reshape(4,4)
-v_kplus1 = np.ones(16)
+v_kplus1 = np.ones(N**2)
 #v_kplus1 = v_kplus1.reshape(4,4)
 k = 0
 diff = 10
