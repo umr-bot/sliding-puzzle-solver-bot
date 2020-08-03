@@ -54,16 +54,12 @@ def transpose(blocks, move=0,N=4):
         return 0,blocks # returning 0 indicates a valid move has been made
     else: return 1,blocks # returning 1 indicates an invalid move
 
-def set_action_matrix(block_index,N=4):
-    if(move == 0):
-        if((block_index+1) > N):
-            i = block_index - N
-   if(move == 1):
-        if(block_index+1) <= N*(N-1):
-            i = block_index + N
-   if(move == 2):
-        if((block_index+1) % N != 1):
-            i = block_index - 1
-   if(move == 3):
-        if((block_index+1) % N > 0) :
-            i = block_index + 1
+def set_action_matrix(P,block_index,N=4):
+    if((block_index+1) > N): # up
+        P[0] = 1
+    if(block_index+1) <= N*(N-1): # down
+        P[1] = 1
+    if((block_index+1) % N != 1): # left
+        P[2] = 1
+    if((block_index+1) % N > 0) : # right
+        P[3] = 1
