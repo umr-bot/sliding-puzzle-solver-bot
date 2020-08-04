@@ -25,25 +25,6 @@ for i in range(P.shape[0]):
         if((block_index+1) % N > 0) : # right
             P[3][i][j] = 1
         
-### Old none working probility matrix initialization
-#P = np.ones(len(a)*len(s)*len(s))  
-#P = P.reshape(len(a),s.shape[0],s.shape[1]) 
-#for i in range(P.shape[0]): # rows
-#        for j in range(P.shape[1]): # columns
-#            for k in range(P.shape[2]): # actions: up,down,left,right
-#                if i==0 and j>0 and (j<P.shape[1]-1): # top middle row
-#                    P[i][j][k] = 0
-#                if (i==P.shape[0]-1) and j>0 and (j<P.shape[1]-1): # bottom middle row
-#                    P[i][j][k] = 0
-#                if j==0 and i>0 and (i<P.shape[0]-1): # left middle column
-#                    P[i][j][k] = 0
-#                if (j==P.shape[1]-1) and i>0 and (i<P.shape[0]-1): # right middle column
-#                    P[i][j][k] = 0
-
-#print("up action probibility matrix\n",P)
-#print("down action probibility matrix\n",P[1])
-#print("left action probibility matrix\n",P[2])
-#print("right action probibility matrix\n",P[3])
 p = P.reshape(N,N**2)
 r = R.reshape(N,N**2)
 for i in range(N): 
