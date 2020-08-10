@@ -22,6 +22,7 @@ def key_press(event):
         return # return to after root.mainloop() if successfully exited
     #print(key, 'is pressed')
     print(puz.blocks)
+    print("reward:",puz.calc_reward())
     base_path = "number images/"
     photo_val = 0
     for i in range(4):
@@ -73,5 +74,3 @@ root.bind('<Key>', lambda a : key_press(a))
 
 root.wm_title("Sliding puzzle solver")
 root.mainloop()
-
-

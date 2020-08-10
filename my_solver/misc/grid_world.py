@@ -37,17 +37,19 @@ v_kplus1 = np.ones((N,1)) # this case 16x1
 k = 0
 diff = 10 # arbritary allocation larger than condition 0.001
 gamma = 1 
-while diff > 0.001 and k<10000000: # loop through all blocks in grid
-    if k < 1: v = v_kplus1 # old v value at iteration k
-    else: v = v_kplus1.T
+while diff > 0.001 and k<10000: # loop through all blocks in grid
+    #if k < 1: v = v_kplus1 # old v value at iteration k
+    #else: 
+    #    v = v_kplus1.T
+    #    print(v_kplus1.T.shape)
+    v = v_kplus1 # old v value at iteration k
     pa = np.amax(p,axis=0)
+    ra = np.amax(r,axis=0)
     # note pa.dot(v_kplus1) result has dimension 1x16
     # hence encase np.max(r,axis=0) with an array
-    t1 = pa.reshape(N,N)
-    print(t1.shape)
-    print(k)
-    temp = pa.reshape(N,N).dot(v_kplus1).T
-    v_kplus1 = np.array([np.max(r,axis=0)]) + gamma*temp
+    if k <= 0: temp = pa.reshape(N,N).dot(v_kplus1).T
+    else: temp = pa.reshape(N,N).dot(v_kplus1.T).T
+    v_kplus1 = ra + gamma*temp
     diff = np.linalg.norm(v_kplus1-v)
     k += 1
     #print("v:\n",v)

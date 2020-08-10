@@ -5,6 +5,7 @@ size = N*N
 # A board is represented by a 1x(N*N) array where N = size of the board
 sn = np.arange(1,10,1)  #blank block is the value 16 in this array representing
                         #final state
+                        #make sure calc_rewards function has correct sn
 up,down,left,right = 0,1,2,3 # enumarate blank blocks possible movements
 #action = [up,down,left,right] # actions for blank block to move
 
@@ -64,8 +65,9 @@ while (s != sn).any():
             a = 3
             r = temp_r
     
-    if a == a_old: continue  # dont move back to the same place ever
+    if (s != s_old).any(): continue  # dont move back to the same place ever
     a_old = a
+    s_old = s
     valid_move,s = transpose(s,move=a,N=N) # update s if valid move
     print(s)
     print(r)
