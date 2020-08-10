@@ -3,14 +3,13 @@ from help_functions import *
 # array of states, where each state is a scalar value
 s = np.zeros(16) # a flattened 4x4 matrix representing a singular state
 s = s.reshape(4,4)
-a = np.arange(4) # action matrix to do with rewards
-
+a = np.arange(4) # action matrix to do with rewards with order:
+                 # up, down, left, right
 R = -1*np.ones(len(a)*s.shape[0]*s.shape[1]) # correction action by states
 R = R.reshape(len(a),s.shape[0],s.shape[1])
 
 P = np.zeros(len(a)*s.shape[0]*s.shape[1]*s.shape[0]*s.shape[1]) # actions by rows by cols by rows by cols 
-P = P.reshape(len(a),s.shape[0],s.shape[1],s.shape[0],s.shape[1]) 
-N = 4
+P = P.reshape(len(a),s.shape[0],s.shape[1],s.shape[0],s.shape[1])
 for i in range(P.shape[0]):
     for j in range(P.shape[1]):
         if(i == 0): # first row (can't move up)
@@ -28,40 +27,30 @@ for i in range(P.shape[0]):
         if(j == P.shape[1]-1): # last column (can't move right)
             P[3][i][j][i][j] = 1
         else: P[3][i][j][i][j+1] #other columns (can move right)
-#for i in range(P.shape[0]):
-#    for j in range(P.shape[1]):
-#        set_action_matrix(P=P[i][j],block_index=i*4+j)
-#        block_index = i*4 + j
-#        if((block_index+1) > N): # up  # if(i == 0)
-#            P[0][i][j] = 1 # P[0][i][j][i-1][j]
-#        #else P[0][i][j][i][j] = 1
-#        if(block_index+1) <= N*(N-1): # down
-#            P[1][i][j] = 1
-#        if((block_index+1) % N != 1): # left
-#            P[2][i][j] = 1
-#        if((block_index+1) % N > 0) : # right
-#            P[3][i][j] = 1
-        
-p = P.reshape(N,s.shape[0]*s.shape[1],s.shape[0]*s.shape[1])
-r = R.reshape(N,s.shape[0]*s.shape[1])
-for i in range(N): 
+N = s.shape[0]*s.shape[1]
+p = P.reshape(len(a),N**2)
+r = R.reshape(len(a),N)
+for i in range(len(a)): 
     r[i][0] = 0 # set all rewards @ index 0 for all actions to zero
-v = np.zeros(N**2) # initial value function value
-#v = v.reshape(4,4)
-v_kplus1 = np.ones(N**2)
-#v_kplus1 = v_kplus1.reshape(4,4)
+v = np.zeros((N,1)) # initial value function value
+v_kplus1 = np.ones((N,1)) # this case 16x1
 k = 0
-diff = 10
-#gamma = np.array([[0.5,0.5**2,0.5**3,0.5**4]]) # discount factor
-#gamma = 0.5
-#while diff > 0.001 and k<10000000: # loop through all blocks in grid
-#    a = np.random.randint(4) #random action, up, down, left or right
-#   max (a)
-#    v = v_kplus1 # old v value at iteration k
-#    v_kplus1 = R[a] + (gamma*P[a]*v_kplus1)
-#    diff = np.linalg.norm(v_kplus1-v)
-#    k += 1
-#    #print("v:\n",v)
-#    #print("v_kplus1:\n",v_kplus1)
-#    #print(diff)
+diff = 10 # arbritary allocation larger than condition 0.001
+gamma = 1 
+while diff > 0.001 and k<10000000: # loop through all blocks in grid
+    if k < 1: v = v_kplus1 # old v value at iteration k
+    else: v = v_kplus1.T
+    pa = np.amax(p,axis=0)
+    # note pa.dot(v_kplus1) result has dimension 1x16
+    # hence encase np.max(r,axis=0) with an array
+    t1 = pa.reshape(N,N)
+    print(t1.shape)
+    print(k)
+    temp = pa.reshape(N,N).dot(v_kplus1).T
+    v_kplus1 = np.array([np.max(r,axis=0)]) + gamma*temp
+    diff = np.linalg.norm(v_kplus1-v)
+    k += 1
+    #print("v:\n",v)
+    #print("v_kplus1:\n",v_kplus1)
+    #print(diff)
 
