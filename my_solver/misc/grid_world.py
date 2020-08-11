@@ -27,32 +27,34 @@ for i in range(P.shape[0]):
         if(j == P.shape[1]-1): # last column (can't move right)
             P[3][i][j][i][j] = 1
         else: P[3][i][j][i][j+1] #other columns (can move right)
+# make down and right transitions from the zeroth block zero
+# and instead then make transistions from the zeroth block to itself
+# equal to 1 (value 1 represents possible movement)
+P[1][0][0][0][0] = 1 
+P[1][0][0][1][0] = 0
+P[3][0][0][0][0] = 1
+P[3][0][0][0][1] = 0
+P[2][0][0][0][0] = 1
+P[2][0][0][0][1] = 0
+P[0][0][0][0][0] = 1
+P[0][0][0][0][1] = 0
+
 N = s.shape[0]*s.shape[1]
-p = P.reshape(len(a),N**2)
+p = P.reshape(len(a),N,N)
 r = R.reshape(len(a),N)
 for i in range(len(a)): 
     r[i][0] = 0 # set all rewards @ index 0 for all actions to zero
-v = np.zeros((N,1)) # initial value function value
-v_kplus1 = np.ones((N,1)) # this case 16x1
+v = np.zeros(N) # initial value function value
+# only need v_kplus1
 k = 0
 diff = 10 # arbritary allocation larger than condition 0.001
 gamma = 1 
-while diff > 0.001 and k<10000: # loop through all blocks in grid
-    #if k < 1: v = v_kplus1 # old v value at iteration k
-    #else: 
-    #    v = v_kplus1.T
-    #    print(v_kplus1.T.shape)
-    v = v_kplus1 # old v value at iteration k
-    pa = np.amax(p,axis=0)
-    ra = np.amax(r,axis=0)
-    # note pa.dot(v_kplus1) result has dimension 1x16
-    # hence encase np.max(r,axis=0) with an array
-    if k <= 0: temp = pa.reshape(N,N).dot(v_kplus1).T
-    else: temp = pa.reshape(N,N).dot(v_kplus1.T).T
-    v_kplus1 = ra + gamma*temp
-    diff = np.linalg.norm(v_kplus1-v)
+while diff > 0.001 and k<10: # loop through all blocks in grid
+    X = r + gamma*p.dot(v)
+    v_kplus1 =  v + X
+    v = np.amax(X,axis=0)
+    
+    diff = np.linalg.norm(v-v_kplus1)
+    print(v.reshape(4,4))
     k += 1
-    #print("v:\n",v)
-    #print("v_kplus1:\n",v_kplus1)
-    #print(diff)
-
+    

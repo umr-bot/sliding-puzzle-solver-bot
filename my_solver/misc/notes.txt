@@ -1,3 +1,9 @@
+11 Aug Tuesday 2020
+Almost have value function working. Just need to get probability matrix fixed it seems. Not sure if the order of the actions(rows) of P matters and is possibly causing the problem. Currently comparing the answers step by step to the Figure in Lecture 3 Dynamic Programming page 24 by David Silver.
+
+10 Aug Monday 2020
+Fixed sizes of matrices and fulling of the probability matrix. An error still remains in the value function update line.
+
 3 Aug Monday 2020
 Probability matrix probably not correct, which is causing final value to be off
 
