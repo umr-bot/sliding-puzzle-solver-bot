@@ -33,9 +33,6 @@ import itertools
     #must still fix:  
 solvable = np.array([[0,1,2,3],[1,3,0,2],[3,2,1,0],[2,0,3,1],[0,1,3,2],[1,2,0,3],[2,3,1,0],[3,0,2,1],[0,3,2,1],[3,1,0,2],[1,2,3,0],[2,0,1,3]])
 
-m = solvable.astype(str).tolist()
-m.sort()
-n = [''.join(row) for row in m]
 ### returns a list of numbers formed by concatenating elements of the input
 ### array state
 def encoder(state):
@@ -43,3 +40,40 @@ def encoder(state):
     state_list.sort()
     return [''.join(row) for row in state_list]
 
+m = solvable.astype(str).tolist()
+m.sort()
+n = [''.join(row) for row in m]
+
+look_up = np.zeros(12).reshape(12,1) 
+for i in range(len(n)): 
+    for j in range(len(n[0])): 
+        if n[i][j] == '3': look_up[i] = j
+P = np.zeros((12*12))
+for pos_blank in range(look_up.shape[0]): # look_up.shape[0] = 4!/2 = 12 for a 2x2 puzzle
+    if look_up[pos_blank]-1 == pos_blank:
+### Solvable states ###
+#[['0', '1', '2', '3'],
+# ['0', '1', '3', '2'],
+# ['0', '3', '2', '1'],
+# ['1', '2', '0', '3'],
+# ['1', '2', '3', '0'],
+# ['1', '3', '0', '2'],
+# ['2', '0', '1', '3'],
+# ['2', '0', '3', '1'],
+# ['2', '3', '1', '0'],
+# ['3', '0', '2', '1'],
+# ['3', '1', '0', '2'],
+# ['3', '2', '1', '0']]
+#OR
+# ['0123',
+# '0132',
+# '0321',
+# '1203',
+# '1230',
+# '1302',
+# '2013',
+# '2031',
+# '2310',
+# '3021',
+# '3102',
+# '3210']
