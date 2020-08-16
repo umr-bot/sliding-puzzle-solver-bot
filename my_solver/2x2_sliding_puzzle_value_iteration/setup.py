@@ -48,9 +48,11 @@ look_up = np.zeros(12).reshape(12,1)
 for i in range(len(n)): 
     for j in range(len(n[0])): 
         if n[i][j] == '3': look_up[i] = j
-P = np.zeros((12*12))
-for pos_blank in range(look_up.shape[0]): # look_up.shape[0] = 4!/2 = 12 for a 2x2 puzzle
-    if look_up[pos_blank]-1 == pos_blank:
+P = np.zeros((12,12))
+for i in range(look_up.shape[0]): # look_up.shape[0] = 4!/2 = 12 for a 2x2 puzzle
+    for j in range(look_up.shape[0]):
+        if np.abs(look_up[i]-look_up[j]) == 1: # pos3(state) - pos3(state + i) i in [0,N-1],N=2
+            P[i][j] = 1
 ### Solvable states ###
 #[['0', '1', '2', '3'],
 # ['0', '1', '3', '2'],

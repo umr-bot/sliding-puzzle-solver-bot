@@ -31,7 +31,8 @@ class puzzle():
             # check if num_inversions plus the row the blank is on is odd
             if (self.num_inversions()+blank_row) % 2 == 1:
                 return True
-    
+        
+        return False
 
     def num_inversions(self):
         inversions = 0

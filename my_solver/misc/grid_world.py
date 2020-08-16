@@ -26,7 +26,7 @@ for i in range(P.shape[0]):
 
         if(j == P.shape[1]-1): # last column (can't move right)
             P[3][i][j][i][j] = 1
-        else: P[3][i][j][i][j+1] #other columns (can move right)
+        else: P[3][i][j][i][j+1] = 1 #other columns (can move right)
 # make down and right transitions from the zeroth block zero
 # and instead then make transistions from the zeroth block to itself
 # equal to 1 (value 1 represents possible movement)
@@ -45,13 +45,12 @@ r = R.reshape(len(a),N)
 for i in range(len(a)): 
     r[i][0] = 0 # set all rewards @ index 0 for all actions to zero
 v = np.zeros(N) # initial value function value
-# only need v_kplus1
 k = 0
 diff = 10 # arbritary allocation larger than condition 0.001
 gamma = 1 
 while diff > 0.001 and k<10: # loop through all blocks in grid
     X = r + gamma*p.dot(v)
-    v_kplus1 =  v + X
+    v_kplus1 =  v
     v = np.amax(X,axis=0)
     
     diff = np.linalg.norm(v-v_kplus1)
