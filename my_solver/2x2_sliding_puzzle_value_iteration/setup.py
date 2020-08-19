@@ -47,17 +47,78 @@ m.sort()
 n = [''.join(row) for row in m] # check end of this file to see output of n
 
 N = 12 # possible solvable states 4!/2. Total states including unsolvable is 4! = 24
-look_up = np.zeros(N).reshape(N,1)
+blank_pos = np.zeros(N).reshape(N,1)
 for i in range(len(n)): 
     for j in range(len(n[0])): 
-        if n[i][j] == '3': look_up[i] = j
+        if n[i][j] == '3': blank_pos[i] = j
 
-P = np.zeros((N,N))
+up,down,left,right = [],[],[],[] # sets indicate states which can move in these 
+                                 # directions
+states = np.array(m).astype(int)
+P = np.zeros((4,N,N))
+for i in range(N):
+    for j in range(N):
+        
+            if blank_pos[i][0] < 2: P[0][i][i] = 1 # can not move up
+            else:
+                if np.sum(states[i] == states[j]) >= 2:
+                    if np.where(states[i] == 3)[0][0]%2 == np.where(states[j] == 3)[0][0]%2: # same col for blanks positions
+                        P[0][i][j] = 1                # can move up
 
-for i in range(12):
-    for j in range(12):
-        if np.sum(solvable[i] == solvable[j]) >= 2:
-            P[i][j] = 1
+            if blank_pos[i][0] >= 2: P[1][i][i] = 1 # can not move down
+            else: 
+                if np.sum(states[i] == states[j]) >= 2:
+                    if np.where(states[i] == 3)[0][0]%2 == np.where(states[j] == 3)[0][0]%2: # same row for blanks positions
+
+                        P[1][i][j] = 1                 # can move down
+
+            if blank_pos[i][0] % 2 == 0: P[2][i][i] = 1 # can not move left
+            else: 
+                if np.sum(states[i] == states[j]) >= 2:
+                    if (np.where(states[i] == 3)[0][0]<2 and np.where(states[j] == 3)[0][0]<2) or (np.where(states[i] == 3)[0][0] >= 2 and np.where(states[j] == 3)[0][0] >= 2): # same row for blanks positions
+                        P[2][i][j] = 1                     # can move left
+
+            if blank_pos[i][0] % 2 == 1: P[3][i][i] = 1 # can not move right
+            else: 
+                if np.sum(states[i] == states[j]) >= 2:
+                    if (np.where(states[i] == 3)[0][0]<2 and np.where(states[j] == 3)[0][0]<2) or (np.where(states[i] == 3)[0][0] >= 2 and np.where(states[j] == 3)[0][0] >= 2): # same row for blanks positions
+
+                        P[3][i][j] = 1                     # can move right
+
+#P = np.zeros((4,N,N)) # actions x states x states
+#for i in range(12):
+#    for j in range(12):
+#        if np.sum(solvable[i] == solvable[j]) >= 2:
+#            P[i][j] = 1
+
+#################
+#P = np.zeros(len(a)*s.shape[0]*s.shape[1]*s.shape[0]*s.shape[1]) # actions by rows by cols by rows by cols 
+#P = P.reshape(len(a),s.shape[0],s.shape[1],s.shape[0],s.shape[1])
+#for i in range(P.shape[0]):
+#    for j in range(P.shape[1]):
+#        if(i == 0): # first row (can't move up)
+#            P[0][i][j][i][j] = 1
+#        else: P[0][i][j][i-1][j] = 1 # other rows (can move up)
+#        
+#        if(i == P.shape[0]-1): # last row (can't move down)
+#            P[1][i][j][i][j] = 1
+#        else: P[1][i][j][i+1][j] = 1 # other rows (can move down)
+#
+#        if(j == 0): # first column (can't move left)
+#            P[2][i][j][i][j] = 1
+#        else: P[2][i][j][i][j-1] = 1 # other columns (can move left)
+#
+#        if(j == P.shape[1]-1): # last column (can't move right)
+#            P[3][i][j][i][j] = 1
+#        else: P[3][i][j][i][j+1] = 1 #other columns (can move right)
+## make down and right transitions from the zeroth block zero
+## and instead then make transistions from the zeroth block to itself
+## equal to 1 (value 1 represents possible movement)
+#P[1][0][0][0][0] = 1 
+#P[1][0][0][1][0] = 0
+#P[3][0][0][0][0] = 1
+#P[3][0][0][0][1] = 0
+#################
 
 #for i in range(look_up.shape[0]): # look_up.shape[0] = 4!/2 = 12 for a 2x2 puzzle
 #    for j in range(look_up.shape[0]):

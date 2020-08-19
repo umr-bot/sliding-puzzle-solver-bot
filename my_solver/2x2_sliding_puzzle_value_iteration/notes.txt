@@ -1,3 +1,12 @@
+18 Aug Wednesday
+Do sarsa lecture 5 slide 22
+
+simulate: takes previous state and action give next state and reward
+want to use q because q doesnt need probs matrix
+slides 13,14,15,19
+Lecture 5 to get policy for grid world
+Learning, Two ways to get into terminal state, and once in this state large reward
+
 16 Aug Sunday 22:04
 Check if using a matrix containing both postion and value for comparison
 will work to check if probablity transition possible.
