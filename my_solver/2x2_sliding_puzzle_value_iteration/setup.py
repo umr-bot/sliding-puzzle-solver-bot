@@ -31,6 +31,17 @@ import itertools
     #must still fix:  for state in lt still fix:
     #must still fix:      if is_solvable(state): st still fix.append(state)
     #must still fix:  
+
+# Return the maximum row m of a mxn matrix
+def max_norm(arr):
+    for i in range(len(arr)-1):
+        maximum = arr[i]
+        if np.linalg.norm(arr[i]) > np.linalg.norm(arr[i+1]): maximum = arr[i+1]
+    return maximum
+
+l=list(itertools.permutations('0123', 4))
+all_states = np.array(l,dtype=np.int) # solvable and unsolvable states
+
 solvable = np.array([   [0,1,2,3],[1,3,0,2],[3,2,1,0],[2,0,3,1],
                         [0,1,3,2],[1,2,0,3],[2,3,1,0],[3,0,2,1],
                         [0,3,2,1],[3,1,0,2],[1,2,3,0],[2,0,1,3] ])
@@ -41,12 +52,12 @@ def encoder(state):
     state_list = state.astype(str).tolist()
     state_list.sort()
     return [''.join(row) for row in state_list]
+
 ### repeating what is being done in the encoder function temporarily to be explicit
-m = solvable.astype(str).tolist()
+m = all_states.astype(str).tolist()
 m.sort()
 n = [''.join(row) for row in m] # check end of this file to see output of n
-
-N = 12 # possible solvable states 4!/2. Total states including unsolvable is 4! = 24
+N = 24 # possible solvable states 4!/2. Total states including unsolvable is 4! = 24
 blank_pos = np.zeros(N).reshape(N,1)
 for i in range(len(n)): 
     for j in range(len(n[0])): 
@@ -98,14 +109,14 @@ k = 0
 diff = 10 # arbritary allocation larger than condition 0.001
 gamma = 1
 arr = []
-while diff > 0.001 and k<1000: # loop through all blocks in grid
+while diff > 0.001 and k<10: # loop through all blocks in grid
     X = R + gamma*P.dot(v)
     v_kplus1 =  v
     arr.append(v_kplus1)
     v = np.amax(X,axis=0)
-    
+    #v = max_norm(X)
     diff = np.linalg.norm(v-v_kplus1)
-#    print(v.reshape(4,4))
+    #print(X)
     k += 1
     
 ### Solvable states ###
