@@ -51,6 +51,6 @@ def transpose(blocks, move=0,N=4):
 
         blank_index = np.where(blocks == (size))[0][0]
         if debug == 0: print("blank is moved to position", blank_index+1)
-        return 0,blocks # returning 0 indicates a valid move has been made
-    else: return 1,blocks # returning 1 indicates an invalid move
+        return blocks # returning 0 indicates a valid move has been made
+    else: return blocks # returning 1 indicates an invalid move
 
