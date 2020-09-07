@@ -1,11 +1,12 @@
 import numpy as np
-
+import itertools
 class env():
 
     def __init__(self,state='0321',N=2):
         self.N = N
         self.state          = state
         self.final_state    = '1230' # 0 is blank block
+        self.states         = self.gen_states()
 
     def step(self, action):
         
@@ -18,8 +19,14 @@ class env():
         reward = -1 # every step incurs reward of -1
         return self.state, reward, terminate
 
-    def reset():
-        pass
+    def reset(self):
+        solvable_states = [ '0123','1302','3210','2031',
+                        '0132','1203','2310','3021',
+                        '0321','3102','1230','2013' ]
+
+        rand = np.random.randint(len(solvable_states))
+        self.state = solvable_states[rand]
+        return self.state
     
     # Switch pieces blank piece up, down, left, or right if possible 
     def transpose(self, move=0):
@@ -28,7 +35,7 @@ class env():
         blank = 0 # blank block is valued zero
         blank_index = np.where(blocks == blank)[0]
         flag = 1
-        debug = 0 # active with 0
+        debug = 1 # active with 0
         if(move == 0):
             if((blank_index+1) > self.N):
                 i = blank_index - self.N
@@ -61,7 +68,18 @@ class env():
             if debug == 0: print("blank is moved to position", blank_index+1)
             return blocks # returning 0 indicates a valid move has been made
         else: return blocks # returning 1 indicates an invalid move
+    
+    # Returns list of a sliding puzzle grids as flattened NxN lists
+    def gen_states(self):
+        l=list(itertools.permutations('0123', 4))
+        all_states = np.array(l,dtype=np.int) # solvable and unsolvable states
 
-e = env()
-up,down,left,right=0,1,2,3
-print(e.step(down))
+        m = all_states.astype(str).tolist()
+        m.sort()
+        state_list = [''.join(row) for row in m]
+        N = len(state_list) # possible solvable states 4!/2. Total states including unsolvable is 4! = 24
+        return state_list
+################ Test of class #################
+#e = env()
+#up,down,left,right=0,1,2,3
+#print(e.step(down))
