@@ -20,10 +20,11 @@ class env():
         return self.state, reward, terminate
 
     def reset(self):
-        solvable_states = [ '0123','1302','3210','2031',
-                        '0132','1203','2310','3021',
-                        '0321','3102','1230','2013' ]
-
+        #solvable_states = [ '0123','1302','3210','2031',
+        #                '0132','1203','2310','3021',
+        #                '0321','3102','1230','2013' ]
+        solvable_states = ['1203','0213','2013','2310','2301',
+                           '1032','0132','3102','3120','3021','0321']#1230 excl
         rand = np.random.randint(len(solvable_states))
         self.state = solvable_states[rand]
         return self.state

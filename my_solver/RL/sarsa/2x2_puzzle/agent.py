@@ -19,20 +19,18 @@ class agent():
             action = np.argmax(self.Q[:,state])
         return action
 
-    def SARSA(self, gamma=0.9, alpha=0.3, epsilon=0.1):
-        episode = 0
-        cnt = 0
+    def SARSA(self, gamma=0.9, alpha=0.1, epsilon=0.1, num_episodes=200, num_steps=100):
         timestep_reward = []
-        while episode < 10000:
+        for episode in range(num_episodes):
             total_reward = 0
             S = self.env.reset()
             #if episode % 5000 == 0 : print("Sarsa",episode)
             A = self.choose_action(state=self.env.states.index(S), epsilon=epsilon)
-            for step in range(100):
+            for step in range(num_steps):
                 S_, R, terminate = self.env.step(A)
                 total_reward += R
-                si = self.env.states.index(S)
-                si_ = self.env.states.index(S_)
+                si = self.env.states.index(S)   #index of state S in Q-table
+                si_ = self.env.states.index(S_) #index of state S_ in Q-table
                 A_ = self.choose_action(state=si_, epsilon=epsilon)
                 if terminate:
                     self.Q[A,si] += alpha*(R - self.Q[A,si])
@@ -42,8 +40,10 @@ class agent():
                 if terminate:
                     timestep_reward.append(total_reward)
                     break
-            #timestep_reward.append(total_reward)
-            episode += 1
+                #if step > num_steps-20: print('episode='+str(episode)+' step'+str(step)+' S='+str(S)+' A'+str(A))
+            #print()
+            timestep_reward.append(total_reward)
+        
         return timestep_reward
 
     def test_agent(self, n_tests=5, delay=0.1):
@@ -61,20 +61,7 @@ class agent():
             while cnt < 1000:
                 time.sleep(delay)
                 self.env.render()
-#                if S_old != S:
                 a = np.argmax(self.Q[:,S])
-#                else:
-#                    #print(cnt)
-#                    copy_Q1 = self.Q.copy()
-#                    copy_Q2 = self.Q.copy()
-#                    flat = copy_Q1.flatten()
-#                    flat2 = flat.copy().tolist()
-#                    flat.sort()
-#                    second_largest_Q_value = flat[-2]
-#                    #print(second_largest_Q_value)
-#                    second_largest_Q_index = flat2.index(second_largest_Q_value)
-#                    a = second_largest_Q_index%4
-#                    print("cnt: "+str(cnt)+" a: "+actions[a])
                 if cnt < 25: print(f"Chose action {actions[a]} for state {s}")
                 s, reward, done = self.env.step(a)
                 S = self.env.states.index(s)
@@ -85,7 +72,7 @@ class agent():
                     print(f"Episode reward: {total_reward}")
                     time.sleep(1)
                     break
-                cnt += 10
+                cnt += 1
 
 ############### TESTING ###############
 def plot_smooth(data,lab):
@@ -99,30 +86,34 @@ def plot_smooth(data,lab):
     
     plt.plot(xnew, data_smooth,label=lab)
 
-def plot_rewards():
-    eps = [0.1,0.01,0.001]
-    ##########
-    #r = dict() # random placeholder values in the list
-    r = [0]
-    num_runs = 50
-    for i in range(len(eps)):
-        print("eps:",eps[i])
-        for j in range(num_runs):
-            agent_  = agent(np.zeros((4,24)))
-            r_temp  = agent_.SARSA(epsilon=eps[i],alpha=0.4,gamma=0.999)
-            r_temp  = np.array( r_temp )
-            shape = np.shape(r_temp)
-            padded_array = np.zeros((10000))
-            padded_array[:shape[0]] = r_temp
-            #print(r_temp.shape)
-            r.append( (r[i]+padded_array)/2 )
-    ################## Plotting average reward values
-    for i in range(1,len(r)+1):
-        lab = 'eps=' + str(eps[i-1])
-        plot_smooth(r[i],lab=lab)
-    plt.xlabel("Number of episodes") 
-    plt.ylabel("Number of rewards") 
-    plt.legend(loc="lower right")
-    plt.show()
-    ################################################
+#def plot_rewards():
+eps = [0.1]
+gamma = 0.9
+alpha = 0.1
+##########
+#r = dict() # random placeholder values in the list
+r = []
+num_runs = 10
+for i in range(len(eps)):
+    print("eps: "+str(eps[i])+" gamma: "+str(gamma)+ " alpha: "+str(alpha))
+    for run in range(num_runs):
+        agent_  = agent(np.zeros((4,24)))
+        r_temp  = agent_.SARSA(epsilon=eps[i],alpha=alpha,gamma=gamma, num_episodes=500,num_steps=100)
+        r_temp  = np.array( r_temp )
+        r.append(r_temp)
+            ##shape = np.shape(r_temp)
+            ##padded_array = np.zeros((1000))
+            ##padded_array[:shape[0]] = r_temp
+            ##r.append( (r[run]+padded_array)/2 )
+        print("run",run)
+################## Plotting average reward values
+for i in range(1,len(eps)+1):
+    lab = 'eps=' + str(eps[i-1])
+    plt.plot(r[i],label=lab)
+    #plt.plot(r_temp)
+plt.xlabel("Number of episodes") 
+plt.ylabel("Number of rewards") 
+plt.legend(loc="lower right")
+plt.show()
+################################################
 
