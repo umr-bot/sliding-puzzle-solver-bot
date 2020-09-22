@@ -28,6 +28,12 @@ class env():
         self.state = solvable_states[rand]
         return self.state
     
+    # write out actions made to a file
+    def render(self):
+        with open("actions.txt", "w+") as file1:
+            file1.write(self.state+'\n')
+            if self.state == self.final_state: file1.write("Done"+'\n')
+
     # Switch pieces blank piece up, down, left, or right if possible 
     def transpose(self, move=0):
         size = self.N**2
@@ -83,3 +89,10 @@ class env():
 #e = env()
 #up,down,left,right=0,1,2,3
 #print(e.step(down))
+
+###############################################################
+['0123','0132','0213','0231','0312','0321',
+ '1023','1032','1203','1230','1302','1320',
+ '2013','2031','2103','2130','2301','2310',
+ '3012','3021','3102','3120','3201','3210']
+
