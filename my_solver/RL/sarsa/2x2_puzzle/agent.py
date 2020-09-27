@@ -24,7 +24,6 @@ class agent():
         for episode in range(num_episodes):
             total_reward = 0
             S = self.env.reset()
-            #if episode % 5000 == 0 : print("Sarsa",episode)
             A = self.choose_action(state=self.env.states.index(S), epsilon=epsilon)
             for step in range(num_steps):
                 S_, R, terminate = self.env.step(A)
@@ -40,8 +39,6 @@ class agent():
                 if terminate:
                     timestep_reward.append(total_reward)
                     break
-                #if step > num_steps-20: print('episode='+str(episode)+' step'+str(step)+' S='+str(S)+' A'+str(A))
-            #print()
             timestep_reward.append(total_reward)
         
         return timestep_reward
@@ -87,33 +84,40 @@ def plot_smooth(data,lab):
     plt.plot(xnew, data_smooth,label=lab)
 
 #def plot_rewards():
-eps = [0.1]
-gamma = 0.9
-alpha = 0.1
+alpha   = 0.3
+gamma   = [1,0.9,0.7,0.5]
+eps     = 0.15
 ##########
 #r = dict() # random placeholder values in the list
-r = []
-num_runs = 10
-for i in range(len(eps)):
-    print("eps: "+str(eps[i])+" gamma: "+str(gamma)+ " alpha: "+str(alpha))
+avg_reward = []
+num_runs = 100
+for i in range(len(gamma)):
+    print("gamma: "+str(gamma[i])+" eps: "+str(eps)+ " aplha: "+str(alpha))
+    run_reward = []
     for run in range(num_runs):
         agent_  = agent(np.zeros((4,24)))
-        r_temp  = agent_.SARSA(epsilon=eps[i],alpha=alpha,gamma=gamma, num_episodes=500,num_steps=100)
+        r_temp  = agent_.SARSA(epsilon=eps,alpha=alpha,gamma=gamma[i], num_episodes=100,num_steps=100)
         r_temp  = np.array( r_temp )
-        r.append(r_temp)
-            ##shape = np.shape(r_temp)
-            ##padded_array = np.zeros((1000))
-            ##padded_array[:shape[0]] = r_temp
-            ##r.append( (r[run]+padded_array)/2 )
+        run_reward.append(r_temp)
         print("run",run)
+    tot = 0
+    for i in range(1,len(run_reward)):
+        shape = np.shape(run_reward[i])
+        padded_array = np.zeros((200))
+        padded_array[:shape[0]] = run_reward[i]
+        tot += padded_array
+    tot = tot/(len(run_reward))
+    avg_reward.append(tot)
 ################## Plotting average reward values
-for i in range(1,len(eps)+1):
-    lab = 'eps=' + str(eps[i-1])
-    plt.plot(r[i],label=lab)
+for i in range(len(gamma)):
+    lab = 'gamma=' + str(gamma[i])
+    plt.plot(avg_reward[i],label=lab)
     #plt.plot(r_temp)
+plt.title("Number of runs="+str(num_runs))
 plt.xlabel("Number of episodes") 
-plt.ylabel("Number of rewards") 
+plt.ylabel("Average reward across all runs") 
 plt.legend(loc="lower right")
 plt.show()
 ################################################
-
+####RUNNING learnt sarsa algorithm####
+#agent_.test_agent()

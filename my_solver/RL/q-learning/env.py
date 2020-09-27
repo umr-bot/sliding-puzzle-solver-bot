@@ -20,14 +20,21 @@ class env():
         return self.state, reward, terminate
 
     def reset(self):
-        solvable_states = [ '0123','1302','3210','2031',
-                        '0132','1203','2310','3021',
-                        '0321','3102','1230','2013' ]
-
+        #solvable_states = [ '0123','1302','3210','2031',
+        #                '0132','1203','2310','3021',
+        #                '0321','3102','1230','2013' ]
+        solvable_states = ['1203','0213','2013','2310','2301',
+                           '1032','0132','3102','3120','3021','0321']#1230 excl
         rand = np.random.randint(len(solvable_states))
         self.state = solvable_states[rand]
         return self.state
     
+    # write out actions made to a file
+    def render(self):
+        with open("actions.txt", "w+") as file1:
+            file1.write(self.state+'\n')
+            if self.state == self.final_state: file1.write("Done"+'\n')
+
     # Switch pieces blank piece up, down, left, or right if possible 
     def transpose(self, move=0):
         size = self.N**2
@@ -83,3 +90,10 @@ class env():
 #e = env()
 #up,down,left,right=0,1,2,3
 #print(e.step(down))
+
+###############################################################
+['0123','0132','0213','0231','0312','0321',
+ '1023','1032','1203','1230','1302','1320',
+ '2013','2031','2103','2130','2301','2310',
+ '3012','3021','3102','3120','3201','3210']
+

@@ -1,6 +1,7 @@
 import numpy as np
 from env import env
 import matplotlib.pyplot as plt
+import time
 
 class agent():
 
@@ -18,20 +19,17 @@ class agent():
             action = np.argmax(self.Q[:,state])
         return action
 
-    def q_learn(self, gamma=0.9, alpha=0.3, epsilon=0.1):
-        episode = 0
-        cnt = 0
+    def Qlearn(self, gamma=0.9, alpha=0.1, epsilon=0.1, num_episodes=200, num_steps=100):
         timestep_reward = []
-        while episode < 10000:
+        for episode in range(num_episodes):
             total_reward = 0
             S = self.env.reset()
-            if episode % 5000 == 0 : print(episode)
             A = self.choose_action(state=self.env.states.index(S), epsilon=epsilon)
-            for step in range(100):
+            for step in range(num_steps):
                 S_, R, terminate = self.env.step(A)
                 total_reward += R
-                si = self.env.states.index(S)
-                si_ = self.env.states.index(S_)
+                si = self.env.states.index(S)   #index of state S in Q-table
+                si_ = self.env.states.index(S_) #index of state S_ in Q-table
                 A_ = np.argmax(self.Q[:, si_])
                 if terminate:
                     self.Q[A,si] += alpha*(R - self.Q[A,si])
@@ -41,27 +39,73 @@ class agent():
                 if terminate:
                     timestep_reward.append(total_reward)
                     break
-            episode += 1
+            timestep_reward.append(total_reward)
+        
         return timestep_reward
-############## TESTING ###############
-eps = [0,0.01,0.1]
-r = dict() # random placeholder values in the lise
-for i in range(len(eps)):
-    agent_ = agent(np.zeros((4,24)))
-    r[i] = agent_.q_learn(epsilon=eps[i])
-    #print(agent.Q.T)
-plt_data = dict()
 
-for i in range(len(r)):
-    r_plt = []
-    for j in range(1,len(r[i])+1): 
-        r_plt.append(sum(r[i][0:j])/j)
-    plt_data[i] = r_plt
-    lab = 'eps=' + str(eps[i])
-    plt.plot(r_plt[i],label=lab)
+    def test_agent(self, n_tests=5, delay=0.1):
+        actions = ['up','down','left','right'] # 0,1,2,3
+        for test in range(n_tests):
+            print(f"Test #{test}")
+            s = self.env.reset()
+            S = self.env.states.index(s)
+            done = False
+            epsilon = 0
+            total_reward = 0
+            cnt = 0
+            S_old = '0000'
+            a = -1
+            while cnt < 1000:
+                time.sleep(delay)
+                self.env.render()
+                a = np.argmax(self.Q[:,S])
+                if cnt < 25: print(f"Chose action {actions[a]} for state {s}")
+                s, reward, done = self.env.step(a)
+                S = self.env.states.index(s)
+                S_old = S
+                total_reward += reward
+                if done:
+                    print("state:",S)
+                    print(f"Episode reward: {total_reward}")
+                    time.sleep(1)
+                    break
+                cnt += 1
 
-#ax = plt.gca() # not really neccesary to save the axes since its only usde once
-#ax.legend(('e0'+str(eps[0]),'e1='+str(eps[1]),'e2='+str(2)))
+#def plot_rewards():
+alpha   = [0.15,0.3,0.6,1]
+gamma   = 0.9
+eps     = 0.15
+##########
+#r = dict() # random placeholder values in the list
+avg_reward = []
+num_runs = 100
+for i in range(len(alpha)):
+    print("alpha: "+str(alpha[i])+" gamma: "+str(gamma)+ " eps: "+str(eps))
+    run_reward = []
+    for run in range(num_runs):
+        agent_  = agent(np.zeros((4,24)))
+        r_temp  = agent_.Qlearn(epsilon=eps,alpha=alpha[i],gamma=gamma, num_episodes=100,num_steps=100)
+        r_temp  = np.array( r_temp )
+        run_reward.append(r_temp)
+        print("run",run)
+    tot = 0
+    for i in range(1,len(run_reward)):
+        shape = np.shape(run_reward[i])
+        padded_array = np.zeros((200))
+        padded_array[:shape[0]] = run_reward[i]
+        tot += padded_array
+    tot = tot/(len(run_reward))
+    avg_reward.append(tot)
+################## Plotting average reward values
+for i in range(len(alpha)):
+    lab = 'alpha=' + str(alpha[i])
+    plt.plot(avg_reward[i],label=lab)
+    #plt.plot(r_temp)
+plt.title("Number of runs="+str(num_runs))
+plt.xlabel("Number of episodes") 
+plt.ylabel("Average reward across all runs") 
 plt.legend(loc="lower right")
 plt.show()
-
+################################################
+####RUNNING learnt sarsa algorithm####
+#agent_.test_agent()
