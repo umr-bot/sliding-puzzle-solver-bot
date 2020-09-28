@@ -19,20 +19,18 @@ class agent():
             action = np.argmax(self.Q[:,state])
         return action
 
-    def SARSA(self, gamma=0.9, alpha=0.3, epsilon=0.1):
-        episode = 0
-        cnt = 0
+    def SARSA(self, gamma=0.9, alpha=0.1, epsilon=0.1, num_episodes=200, num_steps=100):
         timestep_reward = []
-        while episode < 10000:
+        for episode in range(num_episodes):
             total_reward = 0
             S = self.env.reset()
-            #if episode % 5000 == 0 : print("Sarsa",episode)
             A = self.choose_action(state=self.env.states.index(S), epsilon=epsilon)
-            for step in range(100):
+            print("epsiode",episode)
+            for step in range(num_steps):
                 S_, R, terminate = self.env.step(A)
                 total_reward += R
-                si = self.env.states.index(S)
-                si_ = self.env.states.index(S_)
+                si = self.env.states.index(S)   #index of state S in Q-table
+                si_ = self.env.states.index(S_) #index of state S_ in Q-table
                 A_ = self.choose_action(state=si_, epsilon=epsilon)
                 if terminate:
                     self.Q[A,si] += alpha*(R - self.Q[A,si])
@@ -42,8 +40,8 @@ class agent():
                 if terminate:
                     timestep_reward.append(total_reward)
                     break
-            #timestep_reward.append(total_reward)
-            episode += 1
+            timestep_reward.append(total_reward)
+        
         return timestep_reward
 
     def test_agent(self, n_tests=5, delay=0.1):
@@ -72,44 +70,44 @@ class agent():
                     print(f"Episode reward: {total_reward}")
                     time.sleep(1)
                     break
-                cnt += 10
+                cnt += 1
 
-############### TESTING ###############
-def plot_smooth(data,lab):
-    from scipy.interpolate import make_interp_spline, BSpline
-    
-    # 10*len(data) represents number of points to make between 0 and len(data)
-    xnew = np.linspace(0, len(data), 10*len(data))
-    
-    spl = make_interp_spline(np.arange(len(data)), data, k=3)  # type:BSpline
-    data_smooth = spl(xnew)
-    
-    plt.plot(xnew, data_smooth,label=lab)
-
-def plot_rewards():
-    eps = [0.1]
-    ##########
-    #r = dict() # random placeholder values in the list
-    r = [0]
-    num_runs = 1
-    for i in range(len(eps)):
-        print("eps:",eps[i])
-        for j in range(num_runs):
-            agent_  = agent(np.zeros((4,362880)))
-            r_temp  = agent_.SARSA(epsilon=eps[i],alpha=0.4,gamma=0.999)
-            r_temp  = np.array( r_temp )
-            shape = np.shape(r_temp)
-            padded_array = np.zeros((10000))
-            padded_array[:shape[0]] = r_temp
-            #print(r_temp.shape)
-            r.append( (r[i]+padded_array)/2 )
-    ################## Plotting average reward values
-    for i in range(1,len(r)+1):
-        lab = 'eps=' + str(eps[i-1])
-        plot_smooth(r[i],lab=lab)
-    plt.xlabel("Number of episodes") 
-    plt.ylabel("Number of rewards") 
-    plt.legend(loc="lower right")
-    plt.show()
-    ################################################
-
+#def plot_rewards():
+#alpha   = 0.3
+#gamma   = [0.9]
+#eps     = 0.15
+###########
+#avg_reward = []
+#num_runs = 1
+#for i in range(len(gamma)):
+#    print("gamma: "+str(gamma[i])+" eps: "+str(eps)+ " aplha: "+str(alpha))
+#    run_reward = []
+#    for run in range(num_runs):
+#        agent_  = agent(np.zeros((4,362880)))
+#        r_temp  = agent_.SARSA(epsilon=eps,alpha=alpha,gamma=gamma[i], num_episodes=10,num_steps=10)
+#        r_temp  = np.array( r_temp )
+#        run_reward.append(r_temp)
+#        print("run",run)
+#    tot = 0
+#    for i in range(1,len(run_reward)):
+#        shape = np.shape(run_reward[i])
+#        padded_array = np.zeros((200))
+#        padded_array[:shape[0]] = run_reward[i]
+#        tot += padded_array
+#    tot = tot/(len(run_reward))
+#    avg_reward.append(tot)
+################### Plotting average reward values
+#for i in range(len(gamma)):
+#    lab = 'gamma=' + str(gamma[i])
+#    plt.plot(avg_reward[i],label=lab)
+#    #plt.plot(r_temp)
+#plt.title("Number of runs="+str(num_runs))
+#plt.xlabel("Number of episodes") 
+#plt.ylabel("Average reward across all runs") 
+#plt.legend(loc="lower right")
+#plt.show()
+################################################
+####RUNNING learnt sarsa algorithm####
+#agent_.test_agent()
+# PYTHON TIMING FUNCTION
+#timeit.timeit
