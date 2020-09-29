@@ -1,6 +1,6 @@
 import numpy as np
-#from env import env
-from env_top_row import env
+from env1 import env
+#from env_top_row import env
 import matplotlib.pyplot as plt
 import time
 
@@ -28,6 +28,7 @@ class agent():
             A = self.choose_action(state=self.env.states.index(S), epsilon=epsilon)
             print("epsiode",episode)
             for step in range(num_steps):
+                if step%500 == 0: print("step",step)
                 S_, R, terminate = self.env.step(A)
                 total_reward += R
                 si = self.env.states.index(S)   #index of state S in Q-table
@@ -86,27 +87,27 @@ for i in range(len(gamma)):
     for run in range(num_runs):
         print("run",run)
         agent_  = agent(np.zeros((4,362880)))
-        r_temp  = agent_.SARSA(epsilon=eps,alpha=alpha,gamma=gamma[i], num_episodes=1,num_steps=100000)
-        r_temp  = np.array( r_temp )
-        run_reward.append(r_temp)
-    tot = 0
-    for i in range(1,len(run_reward)):
-        shape = np.shape(run_reward[i])
-        padded_array = np.zeros((200))
-        padded_array[:shape[0]] = run_reward[i]
-        tot += padded_array
-    tot = tot/(len(run_reward))
-    avg_reward.append(tot)
-################## Plotting average reward values
-#for i in range(len(gamma)):
-#    lab = 'gamma=' + str(gamma[i])
-#    plt.plot(avg_reward[i],label=lab)
-#    #plt.plot(r_temp)
-#plt.title("Number of runs="+str(num_runs))
-#plt.xlabel("Number of episodes") 
-#plt.ylabel("Average reward across all runs") 
-#plt.legend(loc="lower right")
-#plt.show()
+        r_temp  = agent_.SARSA(epsilon=eps,alpha=alpha,gamma=gamma[i], num_episodes=100,num_steps=2500)
+#        r_temp  = np.array( r_temp )
+#        run_reward.append(r_temp)
+#    tot = 0
+#    for i in range(1,len(run_reward)):
+#        shape = np.shape(run_reward[i])
+#        padded_array = np.zeros((50))
+#        padded_array[:shape[0]] = run_reward[i]
+#        tot += padded_array
+#    tot = tot/(len(run_reward))
+#    avg_reward.append(tot)
+################# Plotting average reward values
+for i in range(len(gamma)):
+    lab = 'gamma=' + str(gamma[i])
+    plt.plot(r_temp,label=lab)
+    #plt.plot(r_temp)
+plt.title("Number of runs="+str(num_runs))
+plt.xlabel("Number of episodes") 
+plt.ylabel("Average reward across all runs") 
+plt.legend(loc="lower right")
+plt.show()
 ################################################
 ####RUNNING learnt sarsa algorithm####
 #agent_.test_agent()
