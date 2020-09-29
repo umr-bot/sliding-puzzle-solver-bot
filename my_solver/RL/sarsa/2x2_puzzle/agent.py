@@ -85,18 +85,18 @@ def plot_smooth(data,lab):
 
 #def plot_rewards():
 alpha   = 0.3
-gamma   = [1,0.9,0.7,0.5]
-eps     = 0.15
+gamma   = 0.9
+eps     = [0,0.015,0.15,0.3]
 ##########
 #r = dict() # random placeholder values in the list
 avg_reward = []
 num_runs = 100
-for i in range(len(gamma)):
-    print("gamma: "+str(gamma[i])+" eps: "+str(eps)+ " aplha: "+str(alpha))
+for i in range(len(eps)):
+    print("eps: "+str(eps[i])+" gamma: "+str(gamma)+ " aplha: "+str(alpha))
     run_reward = []
     for run in range(num_runs):
         agent_  = agent(np.zeros((4,24)))
-        r_temp  = agent_.SARSA(epsilon=eps,alpha=alpha,gamma=gamma[i], num_episodes=100,num_steps=100)
+        r_temp  = agent_.SARSA(epsilon=eps[i],alpha=alpha,gamma=gamma, num_episodes=100,num_steps=100)
         r_temp  = np.array( r_temp )
         run_reward.append(r_temp)
         print("run",run)
@@ -109,8 +109,8 @@ for i in range(len(gamma)):
     tot = tot/(len(run_reward))
     avg_reward.append(tot)
 ################## Plotting average reward values
-for i in range(len(gamma)):
-    lab = 'gamma=' + str(gamma[i])
+for i in range(len(eps)):
+    lab = 'eps=' + str(eps[i])
     plt.plot(avg_reward[i],label=lab)
     #plt.plot(r_temp)
 plt.title("Number of runs="+str(num_runs))
