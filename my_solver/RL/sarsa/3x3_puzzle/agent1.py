@@ -7,9 +7,11 @@ import time
 class agent():
 
     def __init__(self, Q):
-        self.Q      = Q
-        self.env    = env()
-        self.Q[:,self.env.states.index(self.env.final_state)] = 0
+        self.Q          = Q
+        self.env        = env()
+        zero, blank     = 0,3
+        Q_terminal_index= (9*zero) + blank # ==> Q[3]
+        self.Q[:,Q_terminal_index] = 0
     # Function to choose the next action 
     def choose_action(self, state, epsilon=0.1):
         if np.random.uniform(0, 1) < epsilon:
@@ -25,14 +27,16 @@ class agent():
         for episode in range(num_episodes):
             total_reward = 0
             S = self.env.reset()
-            A = self.choose_action(state=self.env.states.index(S), epsilon=epsilon)
+            print("s in agent1",S[0])
+            print("Q_index",self.env.Q_index(Qstate=S))
+            A = self.choose_action(state=self.env.Q_index(Qstate=S), epsilon=epsilon)
             print("epsiode",episode)
             for step in range(num_steps):
-                if step%500 == 0: print("step",step)
+                print("step",step)
                 S_, R, terminate = self.env.step(A)
                 total_reward += R
-                si = self.env.states.index(S)   #index of state S in Q-table
-                si_ = self.env.states.index(S_) #index of state S_ in Q-table
+                si = self.env.Q_index(S)   #index of state S in Q-table
+                si_ = self.env.Q_index(S_) #index of state S_ in Q-table
                 A_ = self.choose_action(state=si_, epsilon=epsilon)
                 if terminate:
                     self.Q[A,si] += alpha*(R - self.Q[A,si])
@@ -86,7 +90,7 @@ for i in range(len(gamma)):
     run_reward = []
     for run in range(num_runs):
         print("run",run)
-        agent_  = agent(np.zeros((4,362880)))
+        agent_  = agent(np.zeros((4,72)))
         r_temp  = agent_.SARSA(epsilon=eps,alpha=alpha,gamma=gamma[i], num_episodes=100,num_steps=2500)
 #        r_temp  = np.array( r_temp )
 #        run_reward.append(r_temp)
