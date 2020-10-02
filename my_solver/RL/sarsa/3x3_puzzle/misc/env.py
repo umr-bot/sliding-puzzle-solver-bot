@@ -11,45 +11,29 @@ class env():
         self.blank_index     = self.state.index(self.blank)
         self.states          = self.gen_states()
         self.solvable_states = self.get_solvable_states()
-        self.b1_states       = self.get_blank_1_states()
     def step(self, action):
         
-        self.state  = self.transpose(move=action) # state referenced to solvable_states
-        #print("self.state[0] in step",self.state[0])
-        terminate   = False
-        if self.state[0] == '0':
-            terminate = True
-        if terminate:   reward = 10000
+        self.state = self.transpose(move=action)
+        terminate = self.state == self.final_state # check if in terminal/final state
+        if terminate:   reward = 100
         else:           reward = -1 # every step incurs reward of -1
         return self.state, reward, terminate
-    def Q_index(self, state):
-        zero  = state[0].index('0')
-        blank = state[0].index('8')
-        return (8*zero) + blank
-    # Returns states with accordance to position of 0 and blank
-    def get_blank_1_states(self):
-        b1_states = {}
-        for state in self.states:
-            key = (state.index('0'),state.index('8'))
-            b1_states.setdefault(key, []).append(state)
-        return b1_states
 
     def reset(self):
-        rand_pos1,rand_posb = 0, 0
-        while rand_pos1 == rand_posb:
-            rand_pos1           = np.random.randint(9)
-            rand_posb           = np.random.randint(9)
-        self.state          = self.b1_states[(rand_pos1, rand_posb)]
+        rand            = np.random.randint(len(self.solvable_states))
+        self.state      = self.solvable_states[rand]
         return self.state
     
+    # write out actions made to a file
+    def render(self):
+        with open("actions.txt", "w+") as file1:
+            file1.write(self.state+'\n')
+            if self.state == self.final_state: file1.write("Done"+'\n')
+
     # Switch pieces blank piece up, down, left, or right if possible 
     def transpose(self, move=0):
         size = self.N**2
-        #print("self.state[0]",self.state[0])
-        x = self.state[0]
-        y = x.index('8')
-        #print(y)
-        self.blank_index = y # get postion of '0'
+        self.blank_index = self.state.index(self.blank) # get postion of '0'
         flag = 1
         debug = 1 # active with 0
         if(move == 0):
@@ -77,9 +61,9 @@ class env():
             else: 
                 if debug == 0: print("Not allowed to move right")
         if flag == 0 : # if move is possible
-            state = self.state[0][:self.blank_index] + self.state[0][i] + self.state[0][self.blank_index+1:]
-            self.state[0] = state[:i] + self.blank + state[i+1:]
-            self.blank_index = self.state[0].index(self.blank)
+            state = self.state[:self.blank_index] + self.state[i] + self.state[self.blank_index+1:]
+            self.state = state[:i] + self.blank + state[i+1:]
+            self.blank_index = self.state.index(self.blank)
             if debug == 0: print("blank is moved to position", self.blank_index+1)
             return self.state
         else: return self.state

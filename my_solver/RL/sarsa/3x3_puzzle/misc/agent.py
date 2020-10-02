@@ -1,17 +1,15 @@
 import numpy as np
-from env1 import env
-#from env_top_row import env
+from encoding0b import Env1
 import matplotlib.pyplot as plt
 import time
 
 class agent():
 
     def __init__(self, Q):
-        self.Q          = Q
-        self.env        = env()
-        zero, blank     = 0,3
-        Q_terminal_index= (8*zero) + blank # ==> Q[3]
-        self.Q[:,Q_terminal_index] = 0
+        self.Q      = Q
+        self.env    = Env1()
+        final_state_index = self.env.states.index(self.env.final_state)
+        self.Q[:,final_state_index] = 0
     # Function to choose the next action 
     def choose_action(self, state, epsilon=0.1):
         if np.random.uniform(0, 1) < epsilon:
@@ -27,18 +25,13 @@ class agent():
         for episode in range(num_episodes):
             total_reward = 0
             S = self.env.reset()
-            #print("S in agent1",S[0])
-            #print("Q_index",self.env.Q_index(state=S))
-            A = self.choose_action(state=self.env.Q_index(state=S), epsilon=epsilon)
-            print("epsiode",episode)
+            A = self.choose_action(state=self.env.states.index(S), epsilon=epsilon)
+            #print("epsiode",episode)
             for step in range(num_steps):
-                if step%5000 == 0: print("step",step)
-                S_, R, terminate = self.env.step(A)
-                #print("S_ in agent1",S_[0])
-                #print("Q_index",self.env.Q_index(state=S_))
+                S_, R, terminate = self.env.step(S,A)
                 total_reward += R
-                si = self.env.Q_index(S)   #index of state S in Q-table
-                si_ = self.env.Q_index(S_) #index of state S_ in Q-table
+                si = self.env.states.index(S)   #index of state S in Q-table
+                si_ = self.env.states.index(S_) #index of state S_ in Q-table
                 A_ = self.choose_action(state=si_, epsilon=epsilon)
                 if terminate:
                     self.Q[A,si] += alpha*(R - self.Q[A,si])
@@ -49,29 +42,28 @@ class agent():
                     timestep_reward.append(total_reward)
                     break
             timestep_reward.append(total_reward)
-        print(timestep_reward)
+        #print(timestep_reward)
         return timestep_reward
 
-    def test_agent(self, n_tests=5, delay=0.1):
+    def test_agent(self, n_tests=2, delay=0.1):
         actions = ['up','down','left','right'] # 0,1,2,3
+        states = self.env.gen_states()
         for test in range(n_tests):
             print(f"Test #{test}")
-            s = self.env.reset()
-            S = self.env.states.index(s)
+            #S = self.env.reset()
+            S = ['x', 'x', '0', 'B', 'x', 'x', 'x', 'x', 'x']
             done = False
-            epsilon = 0
             total_reward = 0
             cnt = 0
-            S_old = '0000'
-            a = -1
-            while cnt < 1000:
+            while cnt < 10000:
                 time.sleep(delay)
-                self.env.render()
-                a = np.argmax(self.Q[:,S])
-                if cnt < 25: print(f"Chose action {actions[a]} for state {s}")
-                s, reward, done = self.env.step(a)
-                S = self.env.states.index(s)
-                S_old = S
+                #self.env.render()
+                A = np.argmax(self.Q[:,states.index(S)])
+                print(f"Chose action {actions[A]} for state {S}")
+                print(cnt)
+                S_, reward, done = self.env.step(S, A)
+                print(done)
+                S = S_
                 total_reward += reward
                 if done:
                     print("state:",S)
@@ -81,33 +73,33 @@ class agent():
                 cnt += 1
 
 #def plot_rewards():
-alpha   = 0.3
-gamma   = [0.9]
-eps     = 0.15
+alpha   = 0.1
+gamma   = 0.99
+eps     = [0.3]
 ##########
 avg_reward = []
-num_runs = 1
-for i in range(len(gamma)):
-    print("gamma: "+str(gamma[i])+" eps: "+str(eps)+ " aplha: "+str(alpha))
+num_runs = 10
+for i in range(len(eps)):
+    print("eps: "+str(eps[i])+" gamma: "+str(gamma)+ " aplha: "+str(alpha))
     run_reward = []
     for run in range(num_runs):
         print("run",run)
         agent_  = agent(np.zeros((4,72)))
-        r_temp  = agent_.SARSA(epsilon=eps,alpha=alpha,gamma=gamma[i], num_episodes=10,num_steps=100000)
-#        r_temp  = np.array( r_temp )
-#        run_reward.append(r_temp)
-#    tot = 0
-#    for i in range(1,len(run_reward)):
-#        shape = np.shape(run_reward[i])
-#        padded_array = np.zeros((50))
-#        padded_array[:shape[0]] = run_reward[i]
-#        tot += padded_array
-#    tot = tot/(len(run_reward))
-#    avg_reward.append(tot)
-################# Plotting average reward values
-for i in range(len(gamma)):
-    lab = 'gamma=' + str(gamma[i])
-    plt.plot(r_temp,label=lab)
+        r_temp  = agent_.SARSA(epsilon=eps[i],alpha=alpha,gamma=gamma, num_episodes=400,num_steps=10000)
+        r_temp  = np.array( r_temp )
+        run_reward.append(r_temp)
+    tot = 0
+    for i in range(1,len(run_reward)):
+        shape = np.shape(run_reward[i])
+        padded_array = np.zeros((1000))
+        padded_array[:shape[0]] = run_reward[i]
+        tot += padded_array
+    tot = tot/(len(run_reward))
+    avg_reward.append(tot)
+################## Plotting average reward values
+for i in range(len(eps)):
+    lab = 'eps=' + str(eps[i])
+    plt.plot(avg_reward[i],label=lab)
     #plt.plot(r_temp)
 plt.title("Number of runs="+str(num_runs))
 plt.xlabel("Number of episodes") 
@@ -116,6 +108,6 @@ plt.legend(loc="lower right")
 plt.show()
 ################################################
 ####RUNNING learnt sarsa algorithm####
-#agent_.test_agent()
+agent_.test_agent()
 # PYTHON TIMING FUNCTION
 #timeit.timeit
