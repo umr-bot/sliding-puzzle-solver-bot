@@ -19,7 +19,9 @@ class Env2():
 
     def gen_states(self):
         state_tuples = set(itertools.permutations('12Bxxx', 6))
-        return [list(state_tuple) for state_tuple in state_tuples]
+        states = [list(state_tuple) for state_tuple in state_tuples]
+        states.sort()
+        return states
     # puzzle with m rows and n columns
     def Move(self,state_in, move,m=3,n=2):
         state = state_in.copy()

@@ -86,13 +86,13 @@ for i in range(len(eps)):
     for run in range(num_runs):
         print("run",run)
         agent_  = agent(np.zeros((4,120)))
-        r_temp  = agent_.SARSA(epsilon=eps[i],alpha=alpha,gamma=gamma, num_episodes=200,num_steps=10000)
+        r_temp  = agent_.SARSA(epsilon=eps[i],alpha=alpha,gamma=gamma, num_episodes=5000,num_steps=10000)
         r_temp  = np.array( r_temp )
         run_reward.append(r_temp)
     tot = 0
     for i in range(1,len(run_reward)):
         shape = np.shape(run_reward[i])
-        padded_array = np.zeros((1000))
+        padded_array = np.zeros((10000))
         padded_array[:shape[0]] = run_reward[i]
         tot += padded_array
     tot = tot/(len(run_reward))
