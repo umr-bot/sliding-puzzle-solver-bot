@@ -4,13 +4,14 @@ class Env1():
     def __init__(self):
         self.final_state = ['0', 'x', 'x', 'B', 'x', 'x', 'x', 'x', 'x']
         self.states = self.gen_states()
-    def step(self, state, action):
+    def step(self, state_in, action):
+        state = state_in.copy()
         done = False
         state = self.Move(state, action)
         reward = -1
         if state[0] == '0' and state[3] == 'B':
             done = True
-            reward = -1
+            reward = 1000
         return state, reward, done
     # Return random state with all values in a state 'x' besides '0' and 'B'
     def reset(self):
@@ -29,7 +30,8 @@ class Env1():
             states0b.remove(['x','x','x','x','x','x','x','x','x']) 
         return states0b
 
-    def Move(self,state, move,N=3):
+    def Move(self,state_in, move,N=3):
+        state = state_in.copy()
         up,down,left,right = 0,1,2,3
         B_index     = state.index('B')
         #one_index   = state.index('0')

@@ -1,5 +1,5 @@
 import numpy as np
-from encoding0b import Env1
+from env0b import Env1
 import matplotlib.pyplot as plt
 import time
 
@@ -45,24 +45,25 @@ class agent():
         #print(timestep_reward)
         return timestep_reward
 
-    def test_agent(self, n_tests=2, delay=0.1):
+    def test_agent(self, n_tests=5, delay=0.1):
         actions = ['up','down','left','right'] # 0,1,2,3
         states = self.env.gen_states()
         for test in range(n_tests):
             print(f"Test #{test}")
-            #S = self.env.reset()
-            S = ['x', 'x', '0', 'B', 'x', 'x', 'x', 'x', 'x']
+            S = self.env.reset()
+            #S = ['x', 'x', '0', 'B', 'x', 'x', 'x', 'x', 'x']
             done = False
             total_reward = 0
             cnt = 0
-            while cnt < 10000:
+            while cnt < 600:
                 time.sleep(delay)
                 #self.env.render()
                 A = np.argmax(self.Q[:,states.index(S)])
-                print(f"Chose action {actions[A]} for state {S}")
-                print(cnt)
+                if cnt%300 == 0 : 
+                    print(f"Chose action {actions[A]} for state {S}")
+                    print(cnt)
                 S_, reward, done = self.env.step(S, A)
-                print(done)
+                #print(done)
                 S = S_
                 total_reward += reward
                 if done:
@@ -108,6 +109,6 @@ plt.legend(loc="lower right")
 plt.show()
 ################################################
 ####RUNNING learnt sarsa algorithm####
-agent_.test_agent()
+#agent_.test_agent()
 # PYTHON TIMING FUNCTION
 #timeit.timeit
