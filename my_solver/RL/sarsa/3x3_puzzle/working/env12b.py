@@ -27,7 +27,6 @@ class Env2():
         state = state_in.copy()
         up,down,left,right = 0,1,2,3
         B_index     = state.index('B')
-        #one_index   = state.index('0')
         temp_state  = 'x'
         if move == up:
             if B_index >= n:

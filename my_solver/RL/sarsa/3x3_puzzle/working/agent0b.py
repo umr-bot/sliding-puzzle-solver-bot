@@ -44,26 +44,49 @@ class agent():
             timestep_reward.append(total_reward)
         #print(timestep_reward)
         return timestep_reward
-
-    def test_agent(self, n_tests=5, delay=0.1):
+    
+    # Uses full state set to solve puzzle using already trained SARSA Q set
+    def test_agent_all_states(self):
+        actions = ['up','down','left','right'] # 0,1,2,3 
+        states = self.env.gen_states() 
+        for test in range(5): 
+            print(f"Test #{test}") 
+            S = self.env.random_group_state() 
+            done = False 
+            total_reward = 0 
+            cnt = 0 
+            while cnt < 100: 
+                time.sleep(0.1) 
+                A = np.argmax(self.Q[:,agent_.env.get_group_index(S)]) 
+                print(f"Chose action {actions[A]} for state {S}") 
+                print(cnt) 
+                S_, reward, done = self.env.step(S, A) 
+                S = S_ 
+                total_reward += reward 
+                if done: 
+                    print("state:",S) 
+                    print(f"Episode reward: {total_reward}") 
+                    time.sleep(1) 
+                    break 
+                cnt += 1
+    
+    # Uses state set that only contains '0', Blanks and 'x' (don't cares)
+    # using already trained SARSA Q set
+    def test_agent_0_B(self, n_tests=5, delay=0.1):
         actions = ['up','down','left','right'] # 0,1,2,3
         states = self.env.gen_states()
         for test in range(n_tests):
             print(f"Test #{test}")
             S = self.env.reset()
-            #S = ['x', 'x', '0', 'B', 'x', 'x', 'x', 'x', 'x']
             done = False
             total_reward = 0
             cnt = 0
-            while cnt < 600:
+            while cnt < 100:
                 time.sleep(delay)
-                #self.env.render()
                 A = np.argmax(self.Q[:,states.index(S)])
-                if cnt%300 == 0 : 
-                    print(f"Chose action {actions[A]} for state {S}")
-                    print(cnt)
+                print(f"Chose action {actions[A]} for state {S}")
+                print(cnt)
                 S_, reward, done = self.env.step(S, A)
-                #print(done)
                 S = S_
                 total_reward += reward
                 if done:
@@ -109,6 +132,6 @@ plt.legend(loc="lower right")
 plt.show()
 ################################################
 ####RUNNING learnt sarsa algorithm####
-#agent_.test_agent()
+agent_.test_agent_all_states()
 # PYTHON TIMING FUNCTION
 #timeit.timeit
