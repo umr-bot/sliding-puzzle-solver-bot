@@ -44,6 +44,31 @@ class agent():
             timestep_reward.append(total_reward)
         #print(timestep_reward)
         return timestep_reward
+    
+    # Uses full state set to solve puzzle using already trained SARSA Q set
+    def test_agent_all_states(self):
+        actions = ['up','down','left','right'] # 0,1,2,3 
+        states = self.env.gen_states()
+        for test in range(5):
+            print(f"Test #{test}")
+            S = self.env.random_group_state()
+            done = False
+            total_reward = 0
+            cnt = 0
+            while cnt < 100:
+                time.sleep(0.1)
+                A = np.argmax(self.Q[:,agent_.env.get_group_index(S)])
+                print(f"Chose action {actions[A]} for state {S}")
+                print(cnt)
+                S_, reward, done = self.env.step(S, A,m=3,n=3)
+                S = S_
+                total_reward += reward
+                if done:
+                    print("state:",S)
+                    print(f"Episode reward: {total_reward}")
+                    time.sleep(1)
+                    break
+                cnt += 1
 
     def test_agent(self, n_tests=5, delay=0.1):
         actions = ['up','down','left','right'] # 0,1,2,3
@@ -51,7 +76,6 @@ class agent():
         for test in range(n_tests):
             print(f"Test #{test}")
             S = self.env.reset()
-            #S = ['x', 'x', '0', 'B', 'x', 'x', 'x', 'x', 'x']
             done = False
             total_reward = 0
             cnt = 0
@@ -98,17 +122,17 @@ for i in range(len(eps)):
     tot = tot/(len(run_reward))
     avg_reward.append(tot)
 ################## Plotting average reward values
-for i in range(len(eps)):
-    lab = 'eps=' + str(eps[i])
-    plt.plot(avg_reward[i],label=lab)
-    #plt.plot(r_temp)
-plt.title("Number of runs="+str(num_runs))
-plt.xlabel("Number of episodes") 
-plt.ylabel("Average reward across all runs") 
-plt.legend(loc="lower right")
-plt.show()
+#for i in range(len(eps)):
+#    lab = 'eps=' + str(eps[i])
+#    plt.plot(avg_reward[i],label=lab)
+#    #plt.plot(r_temp)
+#plt.title("Number of runs="+str(num_runs))
+#plt.xlabel("Number of episodes") 
+#plt.ylabel("Average reward across all runs") 
+#plt.legend(loc="lower right")
+#plt.show()
 ################################################
 ####RUNNING learnt sarsa algorithm####
-agent_.test_agent()
+#agent_.test_agent()
 # PYTHON TIMING FUNCTION
 #timeit.timeit
