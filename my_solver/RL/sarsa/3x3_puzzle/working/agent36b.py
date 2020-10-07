@@ -98,9 +98,9 @@ class agent():
                 cnt += 1
 
 #def plot_rewards():
-#alpha   = 0.1
-#gamma   = 0.99
-#eps     = [0.3]
+alpha   = 0.1
+gamma   = 0.99
+eps     = [0.3]
 ###########
 #avg_reward = []
 #num_runs = 10
@@ -137,4 +137,5 @@ class agent():
 # PYTHON TIMING FUNCTION
 #timeit.timeit
 agent_  = agent(np.zeros((4,120)))
+agent_.SARSA(epsilon=eps[0],alpha=alpha,gamma=gamma, num_episodes=5000,num_steps=10000)
 
