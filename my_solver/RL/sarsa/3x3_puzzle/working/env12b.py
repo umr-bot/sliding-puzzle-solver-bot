@@ -49,19 +49,7 @@ class Env2():
         if index >= 4:               return index + 3
         if index >= 2 and index < 4: return index + 2
         if index < 2:                return index + 1
-    def convert_3x3_to_3x2(self,index):
-        if index > 6:               return index - 3
-        if index > 3 and index < 6: return index - 2
-        if index < 3:               return index - 1
 
-    def get_tuple_index(self, state):
-        for i in range(6):
-            for j in range(6):
-                 for k in range(6):
-                     if i!=j and i!=k and j!=k:
-                         if state in e.grouped_states[(i,j,k)]: 
-                             #print("(i,j,k)",i,j,k)
-                             return (i,j,k)
     def tuple_grouped_3x3_states(self):
         with open('solvable_states.txt','r') as file:
             states = file.readline()
