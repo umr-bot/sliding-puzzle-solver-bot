@@ -3,7 +3,7 @@ from env_0_to_12_b import Env4
 import matplotlib.pyplot as plt
 import time
 
-class agent():
+class Agent2a():
 
     def __init__(self, Q):
         self.Q      = Q
@@ -11,6 +11,7 @@ class agent():
         for final_state in self.env.final_states_12bx:
             final_state_index = self.env.states.index(final_state)
             self.Q[:,final_state_index] = 0
+        self.actions = ['up','down','left','right'] # 0,1,2,3
 
     # Function to choose the next action 
     def choose_action(self, state, epsilon=0.1):
@@ -47,20 +48,41 @@ class agent():
         #print(timestep_reward)
         return timestep_reward
 
+    def solve(self, state, delay=0.1):
+        S = state
+        done = False
+        total_reward = 0
+        cnt = 0
+        states = []
+        states.append(S)
+        for cnt in range(100):
+            time.sleep(delay)
+            A = np.argmax(self.Q[:,self.env.get_group_index(S)])
+            print(f"Chose action {self.actions[A]} for state {S}")
+            print(cnt)
+            S_, reward, done = self.env.step(S, A,m=3,n=3)
+            states.append(S_)
+            S = S_
+            total_reward += reward
+            if done:
+                print("final state:",S)
+                print(f"Episode reward: {total_reward}")
+                time.sleep(1)
+                return S, states
+
     # Uses full state set to solve puzzle using already trained SARSA Q set
-    def test_agent_all_states(self):
-        actions = ['up','down','left','right'] # 0,1,2,3 
+    def test_agent_all_states(self,delay=0.1):
         for test in range(5):
             print(f"Test #{test}")
             S = self.env.random_group_state()
             done = False
             total_reward = 0
             cnt = 0
-            while cnt < 100:
-                time.sleep(0.1)
+            for cnt in range(100):
+                time.sleep(delay)
                 #print(agent_.env.get_group_index(S))
-                A = np.argmax(self.Q[:,agent_.env.get_group_index(S)])
-                print(f"Chose action {actions[A]} for state {S}")
+                A = np.argmax(self.Q[:,self.env.get_group_index(S)])
+                print(f"Chose action {self.actions[A]} for state {S}")
                 print(cnt)
                 S_, reward, done = self.env.step(S, A,m=3,n=3)
                 S = S_
@@ -70,10 +92,8 @@ class agent():
                     print(f"Episode reward: {total_reward}")
                     time.sleep(1)
                     break
-                cnt += 1
 
     def test_agent(self, n_tests=5, delay=0.1):
-        actions = ['up','down','left','right'] # 0,1,2,3
         states = self.env.gen_states()
         for test in range(n_tests):
             print(f"Test #{test}")
@@ -81,12 +101,12 @@ class agent():
             done = False
             total_reward = 0
             cnt = 0
-            while cnt < 100:
+            for cnt in range(100):
                 time.sleep(delay)
                 #self.env.render()
                 A = np.argmax(self.Q[:,states.index(S)])
                 if 0 == 0 : 
-                    print(f"Chose action {actions[A]} for state {S}")
+                    print(f"Chose action {self.actions[A]} for state {S}")
                     print(cnt)
                 S_, reward, done = self.env.step(S, A)
                 #print(done)
@@ -97,47 +117,50 @@ class agent():
                     print(f"Episode reward: {total_reward}")
                     time.sleep(1)
                     break
-                cnt += 1
 
-#def plot_rewards():
-alpha   = 0.1
-gamma   = 0.99
-eps     = [0.3]
-###########
-#avg_reward = []
-#num_runs = 10
-#for i in range(len(eps)):
-#    print("eps: "+str(eps[i])+" gamma: "+str(gamma)+ " aplha: "+str(alpha))
-#    run_reward = []
-#    for run in range(num_runs):
-#        print("run",run)
-#        agent_  = agent(np.zeros((4,120)))
-#        r_temp  = agent_.SARSA(epsilon=eps[i],alpha=alpha,gamma=gamma, num_episodes=5000,num_steps=10000)
-#        r_temp  = np.array( r_temp )
-#        run_reward.append(r_temp)
-#    tot = 0
-#    for i in range(1,len(run_reward)):
-#        shape = np.shape(run_reward[i])
-#        padded_array = np.zeros((10000))
-#        padded_array[:shape[0]] = run_reward[i]
-#        tot += padded_array
-#    tot = tot/(len(run_reward))
-#    avg_reward.append(tot)
-################## Plotting average reward values
-#for i in range(len(eps)):
-#    lab = 'eps=' + str(eps[i])
-#    plt.plot(avg_reward[i],label=lab)
-#    #plt.plot(r_temp)
-#plt.title("Number of runs="+str(num_runs))
-#plt.xlabel("Number of episodes") 
-#plt.ylabel("Average reward across all runs") 
-#plt.legend(loc="lower right")
-#plt.show()
+def plot_rewards():
+    alpha   = 0.1
+    gamma   = 0.99
+    eps     = [0.3]
+    ##########
+    avg_reward = []
+    num_runs = 10
+    for i in range(len(eps)):
+        print("eps: "+str(eps[i])+" gamma: "+str(gamma)+ " aplha: "+str(alpha))
+        run_reward = []
+        for run in range(num_runs):
+            print("run",run)
+            agent2a  = Agent2a(np.zeros((4,120)))
+            r_temp  = agent2a.SARSA(epsilon=eps[i],alpha=alpha,gamma=gamma, num_episodes=5000,num_steps=10000)
+            r_temp  = np.array( r_temp )
+            run_reward.append(r_temp)
+        tot = 0
+        for i in range(1,len(run_reward)):
+            shape = np.shape(run_reward[i])
+            padded_array = np.zeros((10000))
+            padded_array[:shape[0]] = run_reward[i]
+            tot += padded_array
+        tot = tot/(len(run_reward))
+        avg_reward.append(tot)
+    ################# Plotting average reward values
+    for i in range(len(eps)):
+        lab = 'eps=' + str(eps[i])
+        plt.plot(avg_reward[i],label=lab)
+        #plt.plot(r_temp)
+    plt.title("Number of runs="+str(num_runs))
+    plt.xlabel("Number of episodes") 
+    plt.ylabel("Average reward across all runs") 
+    plt.legend(loc="lower right")
+    plt.show()
 ################################################
 ####RUNNING learnt sarsa algorithm####
 #agent_.test_agent()
 # PYTHON TIMING FUNCTION
 #timeit.timeit
-agent_  = agent(np.zeros((4,120)))
-agent_.SARSA(epsilon=eps[0],alpha=alpha,gamma=gamma, num_episodes=5000,num_steps=10000)
+def main():
+    alpha   = 0.1
+    gamma   = 0.99
+    eps     = 0.3
+    agent2a  = Agent2a(np.zeros((4,120)))
+    r_temp  = agent2a.SARSA(epsilon=eps[i],alpha=alpha,gamma=gamma, num_episodes=5000,num_steps=10000)
 

@@ -39,12 +39,15 @@ class Env4():
 
     def grouped_states(self):
         state_list = [None] * 120
+#        for es in self.states:
+#            for key,item in self.tuple_grouped_states.items(): # key = index ; item = state
+#                if key == (self.convert_3x2_to_3x3(es.index('1')), self.convert_3x2_to_3x3(es.index('2')), self.convert_3x2_to_3x3(es.index('8'))):
+#                    state_list[self.states.index(es)] = item
         for es in self.states:
-            for key,item in self.tuple_grouped_states.items(): # key = index ; item = state
-                if key == (self.convert_3x2_to_3x3(es.index('1')), self.convert_3x2_to_3x3(es.index('2')), self.convert_3x2_to_3x3(es.index('8'))):
+            for key,item in self.tuple_grouped_states.items():
+                if item[0][0] == '0':
                     state_list[self.states.index(es)] = item
         return state_list
-
     def convert_3x2_to_3x3(self,index):
         return index + 3
     
