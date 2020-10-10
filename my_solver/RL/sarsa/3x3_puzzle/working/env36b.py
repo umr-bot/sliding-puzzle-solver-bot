@@ -29,7 +29,7 @@ class Env3():
         return self.states[np.random.randint(len(self.states))]
     
     def get_group_index(self, state):
-        for i in range(len(self.states)):
+        for i in range(len(self.grouped_states)):
             if state in self.grouped_states[i]:
                 return i
 
@@ -40,7 +40,7 @@ class Env3():
         state_list = [None] * 120
         for es in self.states:
             for key,item in self.tuple_grouped_states.items(): # key = index ; item = state
-                if key == (self.convert_3x2_to_3x3(es.index('3')), self.convert_3x2_to_3x3(es.index('6')), self.convert_3x2_to_3x3(es.index('8'))):
+                if key == (self.convert_3x2_to_3x3(es.index('3')), self.convert_3x2_to_3x3(es.index('6')),self.convert_3x2_to_3x3(es.index('8'))):
                     state_list[self.states.index(es)] = item
         return state_list
 
@@ -58,8 +58,8 @@ class Env3():
                     grouped_states[(state.index('3'),state.index('6'), state.index('8'))].append(list(state))
         return grouped_states
     
-    def gen_states(self):
-        state_tuples = set(itertools.permutations('368xxx', 6))
+    def gen_states(self, elements='368xxx',num_dig=6):
+        state_tuples = set(itertools.permutations(elements, num_dig))
         states = [list(state_tuple) for state_tuple in state_tuples]
         states.sort()
         return states
