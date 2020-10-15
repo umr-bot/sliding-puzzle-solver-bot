@@ -4,8 +4,9 @@ from agent_0_to_12_b import Agent2a
 from agent12b import Agent2b
 from agent36b import Agent3
 from agent_2x2 import Agent_2x2
+from image_saver import save_fig
 alpha   = 0.1
-gamma   = 0.99
+gamma   = 0.95
 eps     = 0.15
 num_episodes = 10000
 state = ['2', '6', '4', '5', '7', '0', '8', '1', '3']
@@ -60,6 +61,8 @@ for state in states:
 cnt = 0
 for i in range(len(ss)):
     for j in range(len(ss[i])):
+        save_fig(state=ss[i][j],state_num=cnt)
         print("state",cnt)
         print(ss[i][j].reshape(3,3))
         cnt += 1
+
