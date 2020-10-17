@@ -5,7 +5,8 @@
 
 % Figures
 \usepackage[margin=\the\parindent,small,bf,sf]{caption}
-\usepackage{graphicx}
+\usepackage{
+}
 \usepackage{pdfpages}
 \setlength{\abovecaptionskip}{7.5pt}  % spacing above and below captions
 \newcommand*{\WaterMark}[2][0.2\paperwidth]{\AddToShipoutPicture*{\AtTextCenter{\parbox[c]{0pt}{\makebox[0pt][c]{\includegraphics[width=#1]{#2}}}}}}
@@ -89,6 +90,9 @@
 \usepackage{cite}  % automatically reorder inline citations
 \bibliographystyle{IEEEtran}
 
+\usepackage{caption}
+\usepackage{subcaption}
+
 % Fix titlesec issue
 \usepackage{etoolbox}
 \makeatletter
@@ -116,10 +120,10 @@
 % Contents
 \input{introduction/introduction}
 \input{Literature_Review/Literature_Review.tex}
+\input{MDP_and_DP/MDP_and_DP.tex}
+\input{RL/RL.tex}
 \input{System_Design/System_Design.tex}
-\input{Detailed_Design/Detailed_Design.tex}
-\input{Results/Results.tex}
-\input{RL_theory/RL_theory.tex}
+\input{Experiments_and_Results/Experiments_and_Results.tex}
 \input{sliding_puzzle/sliding_puzzle.tex}
 \input{conclusion/conclusion}
 
