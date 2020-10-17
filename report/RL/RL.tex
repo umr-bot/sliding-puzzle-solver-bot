@@ -39,8 +39,8 @@ The value function is updated continuously until the difference between $v^{k}$ 
 	\caption{Policy Iteration \cite{David_Silver}}
 	\label{fig:policy_iteration}
 \end{figure}
-\section{Reinforcement Learning}
-\subsection{Introduction}
+
+\subsection{Policy Iteration}
 There are two separate uses for Dynamic Programming in Reinforcement Learning. These are prediction and control which both have $(S,A,P,R,\gamma)$ as input.
 \begin{itemize}
 	\item The prediction method uses $(S,A,P,R,\gamma)$ and a policy $\pi$ as input, while it outputs a value function $v_\pi$.
@@ -49,9 +49,6 @@ There are two separate uses for Dynamic Programming in Reinforcement Learning. T
 {\color{red} Maybe insert a flow diagram illustrating difference and similarity between prediction and control }
 
 These two methods of Dynamic programming are implemented via what is known as value iteration and policy iteration respectively.
-
-\subsection{Policy Iteration}
-
 Figure \ref{fig:greedy_policy_iteration} shows how Greedy Policy Iteration works. A greedy policy is one which when followed, results in the maximum value function $v_\pi$. It is known that policy iteration converges which can also be seen in the diagram in Figure \ref{fig:greedy_policy_iteration} on the top left.\cite{sutton_barto}
 
 As is stated in Figure \ref{fig:greedy_policy_iteration} policy iteration works by continuously iterating between two steps, namely policy evaluation and policy improvement.
@@ -75,3 +72,19 @@ Figure \ref{fig:value_iteration} shows the mathematics that describes \textit{Va
 While Value Iteration calculates the maximum value function for a single action only. In this sense Value Iteration is a special case of Iterative Policy Evaluation.
 
 {\color{red} Can later place in appendix proof of policy iteration always converging. slide 19 (16/42) of David Silvers slides on Dynamic Programming}
+\section{Reinforcement Learning}
+\subsection{Model-free control}
+What we have been discussing up to now all has had to do with using methods which required knowledge about the model. This knowledge was embedded in the probability transition matrix P. Often times this matrix P is extremely large making calculations impossible. While at other times it is not possible to know the model of the environment beforehand. We therefore look at methods which do not need models.
+
+There exists both model-free prediction and model-free control Reinforcement Learning techniques.
+Model-free \textbf{prediction \textit{evaluates}} the value function of an unknown MDP.
+While Model-free \textbf{control \textit{optimizes}} the value function of an unknown MDP.
+We will only look at model-free control.
+
+There are two ways that model-free control can be implemented:
+
+\textbf{On-policy learning:}
+Learning characteristics of a policy $\pi$ by sampling from $\pi$
+
+\textbf{Off-policy learning:}
+Learn characteristics of policy $\pi$ by sampling another policy $\mu$
