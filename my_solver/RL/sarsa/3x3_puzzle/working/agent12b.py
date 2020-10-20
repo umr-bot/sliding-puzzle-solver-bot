@@ -53,7 +53,6 @@ class Agent2b():
         total_reward = 0
         cnt = 0
         states = []
-        states.append(S)
         for cnt in range(100):
             time.sleep(delay)
             A = np.argmax(self.Q[:,self.env.get_group_index(S)])
