@@ -12,10 +12,10 @@ gamma   = 0.95
 eps     = 0.15
 num_episodes = 10000
 
-e = Env1()
-state = e.random_group_state()
-print("INITIAL STATE",state)
-#state = ['2', '6', '4', '5', '7', '0', '8', '1', '3']
+#e = Env1()
+#state = e.random_group_state()
+#print("INITIAL STATE",state)
+state = ['2', '6', '4', '5', '7', '0', '8', '1', '3']
 
 states =[]
 if state[0] != '0':
@@ -54,7 +54,7 @@ if state[3] != '3' or state[6] != '6':
 print("current state after agent3 is",state)
 
 agent_2x2  = Agent_2x2(np.zeros((4,24)))
-agent_2x2.SARSA(epsilon=eps,alpha=alpha,gamma=gamma, num_episodes=100,num_steps=100)
+agent_2x2.SARSA(epsilon=eps,alpha=alpha,gamma=gamma, num_episodes=1000,num_steps=100)
 temp_state =state[4]+state[5]+state[7] + state[8]
 fs, s_2x2 = agent_2x2.solve(temp_state)
 ll = []

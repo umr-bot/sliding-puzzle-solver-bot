@@ -28,5 +28,5 @@ def save_fig(state,state_num):
         ax.get_xaxis().set_ticks([])
         ax.get_yaxis().set_ticks([])
         ax.imshow(im)
-    fig.savefig('game/'+str(state_num), bbox_inches='tight')
+    fig.savefig('puzzle/'+str(state_num), bbox_inches='tight')
     #plt.show()
