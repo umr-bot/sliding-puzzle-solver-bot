@@ -3,68 +3,49 @@
 \chapter{Introduction}
 \label{chap:introduction}
 
+\section{Problem Statement and Project Objective}
+In robotics, a manipulator (ie. a robotic arm) is a device used to manipulate objects in its environment. When the manipulation task is relatively complex, it is often difficult or even impossible for a human to direct how the robot should act. One possible solution is that the robot learn by itself which actions are best, which can be done through reinforcement learning. A popular method for doing developing reinforcement learning algorithms for robotics is to first solve similar, less complex problems.
+
+In this project reinforcement learning is used to solve sliding puzzle. An example of a sliding puzzle being solved can be seen in Figure \ref{fig:sliding_puzzle_figs}. The objective of this project is to solve a shuffled puzzle with the minimum amount of moves using reinforcement learning. The rules of the game are explained in the next section, . 
+
 \section{Background}
-In the modern world robots have become an integral part of our daily lives and society. For example the Xiaomi cleaning robot which can automatically clean a house floor.
-Generally in robotics a manipulator (eg.
-an arm) is used to manipulate an object in
-the environment.
 
-It is easier to first simulate the robots behavior in a
-more simple environment which is why we will solve a similar and smaller problem as a step to a complete solution. By doing so we can save expenses, as it is costly to test a robot in reality while simulation is much cheaper. \newline
-
-The sliding puzzle is a game with a history dating back to the 1870's. The aim of the game is to arrange a shuffled set of numbered tiles into ascending order by sliding and swapping the black/blank tile piece into one of its neighboring tiles. An example of a puzzle being solved is shown in \ref{fig:sliding_puzzle_figs}.
+The sliding puzzle is a game with a history dating back to the 1870's. Many solutions have been thought up to solve such puzzles, which include using search algorithms\cite{search_alg}. The rules of the game are that the only tiles that can move are the ones next to the tile with no number, known as the 'blank tile'. Additionally only one tile can be moved at a time. The final puzzle configuration is shown in \ref{fig:sfig4}, where all the tiles are placed in ascending order read left to right and top to bottom. The aim of the game is to arrange a shuffled puzzle into the final puzzle configuration by moving one tile at a time.
 
 \begin{figure}[!htb]
 	\centering
-	\begin{subfigure}{.2\textwidth}
+	\begin{subfigure}{.4\textwidth}
 		\centering
-		\includegraphics[width=.75\linewidth]{game_states/31.png}
-		\caption{1a}
+		\includegraphics[width=.8\linewidth]{game_states/31.png}
+		\caption{Puzzle with tiles 5,6,8 and blank in the incorrect positions}
 		\label{fig:sfig1}
 	\end{subfigure}%
-	\begin{subfigure}{.2\textwidth}
+	\begin{subfigure}{.4\textwidth}
 		\centering
-		\includegraphics[width=.75\linewidth]{game_states/32.png}
-		\caption{1b}
+		\includegraphics[width=.8\linewidth]{game_states/32.png}
+		\caption{Puzzle with tiles 5,8 and blank in the incorrect positions}
 		\label{fig:sfig2}
 	\end{subfigure}
-	\begin{subfigure}{.2\textwidth}
+	\begin{subfigure}{.4\textwidth}
 		\centering
-		\includegraphics[width=.75\linewidth]{game_states/33.png}
-		\caption{1b}
+		\includegraphics[width=.8\linewidth]{game_states/33.png}
+		\caption{Puzzle with tiles 8 and blank in the incorrect positions}
 		\label{fig:sfig3}
 	\end{subfigure}
-	\begin{subfigure}{.2\textwidth}
+	\begin{subfigure}{.4\textwidth}
 		\centering
-		\includegraphics[width=.75\linewidth]{game_states/34.png}
-		\caption{1b}
+		\includegraphics[width=.8\linewidth]{game_states/34.png}
+		\caption{Solved puzzle}
 		\label{fig:sfig4}
 	\end{subfigure}
 	\caption{Figures of a 3x3 sliding puzzle being solved}
 	\label{fig:sliding_puzzle_figs}
 \end{figure}
 
-\section{Problem Statement/ Research Aim}
-In this project
-we solve sliding puzzles using
-reinforcement learning, where the same algorithm can then later be applied to the robotics problem of moving in an environment.
-
-\section{Project Objectives}
-\begin{itemize}
-	\item Solve a 2x2 sliding puzzle using Reinforcement learning
-	\item Solve a 3x3 puzzle using Reinforcement learning
-	\item Puzzles must solve in a reasonable amount of time
-\end{itemize}
-
-\section{Scope}
-Although there are many methods to solve a problem in RL, in this project we only look at two methods. These are SARSA (State-Action-Reward-State-Action) and Q-learning. 
-
-Typically for problems with large state spaces, neural networks are used in conjunction with Reinforcement Learning techniques to save computational time. However for this project we will use a certain method to overcome the state space limitation which will be discussed later.
-
 \section{Document Outline} 
 Chapter \ref{chap:Literature_Review} looks at a paper which used an alternate approach to solve a 16 tile sliding puzzle.
 
-Chapter \ref{chap:MDP_and_DP} describes in detail the mathematical background theory which forms the basis for Reinforcement Learning.
+Chapter \ref{chap:MDP} describes in detail the mathematical background theory which forms the basis for Reinforcement Learning.
 
 Chapter \ref{chap:RL} discusses in detail the Reinforcement Learning techniques which will be used to solve our puzzle problem.
 

@@ -99,7 +99,7 @@ There always exists an optimal deterministic policy for any MDP \cite{sutton_bar
 
 We now finally define what is know as the Bellman \textit{Optimality} Equations which is a specific form of equation \ref{bellmanv1} and \ref{bellmanv2} which are:
 \begin{equation}
-	v_*(s) = \max\limits_{a}R^{a}_s+\gamma\sum_{s'\in S}P^{a}_{ss'}v_*(s')
+	v_*(s) = \max\limits_{a}(R^{a}_s+\gamma\sum_{s'\in S}P^{a}_{ss'}v_*(s'))
 	\label{bellmanv*}
 \end{equation}
 \begin{equation}

@@ -3,10 +3,10 @@
 \label{chap:RL}
 
 \section{Introduction}
-
+This chapter can be divided into three sections. Dynamic programming which \textbf{solves} a \textit{\textbf{known}} MDP, model-free prediction which \textbf{estimates} an \textit{\textbf{unknown}} MDP and model-free control which \textbf{optimizes} the value function of an \textit{\textbf{unknown}} MDP.
 
 \section{Dynamic Programming}
-\subsection{Introduction}
+\subsection{Background}
 Dynamic programming is a method to solve problems by using a divide and conquer approach. That is to say a problem is broken into smaller sub-problems and then solved.
 There are two properties that must be met for a problem to be solvable via Dynamic Programming: Optimal substructure and Overlapping sub-problems. \cite{David_Silver}
 \begin{itemize}
@@ -57,7 +57,11 @@ As is stated in Figure \ref{fig:greedy_policy_iteration} policy iteration works 
 For a given policy $\pi$ we improve the policy using the following two steps:\\\\
 \textbf{Step one} is \textit{Evaluating} the policy $\pi$ using equation \ref{bellmanv2}: \[v_{\pi}(s) = E_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1})|S_t = s]\]
 \textbf{Step two} is \textit{Improving} the policy by acting greedy with respect to $v_\pi$ to obtain a new policy $\pi^{'}$:
-\[\pi^{'} = greedy(v_{\pi})\]
+\begin{align}
+	\pi^{'} &= greedy(v_{\pi})= v_{*}
+	\label{pi'}
+\end{align}
+\[\pi^{'}(s) = \max\limits_{a}(R^{a}_s+\gamma\sum_{s'\in S}P^{a}_{ss'}v_*(s'))\]
 
 What this means is that we obtain a value function by using iterative policy evaluation where after we update the policy. In this way we will always converge to the optimal policy $\pi_{*}$ and value function $v_{*}$ described by equation \ref{eq:pi_*} and \ref{bellmanv*} respectively.
 \subsection{Value Iteration}
@@ -73,13 +77,11 @@ While Value Iteration calculates the maximum value function for a single action 
 
 {\color{red} Can later place in appendix proof of policy iteration always converging. slide 19 (16/42) of David Silvers slides on Dynamic Programming}
 \section{Reinforcement Learning}
-\subsection{Model-free control}
-What we have been discussing up to now all has had to do with using methods which required knowledge about the model. This knowledge was embedded in the probability transition matrix P. Often times this matrix P is extremely large making calculations impossible. While at other times it is not possible to know the model of the environment beforehand. We therefore look at methods which do not need models.
+What we have been discussing up to now all has had to do with using methods which required knowledge about the model. This knowledge was embedded in the probability transition matrix P. Often times this matrix P is extremely large making calculation times long. While at other times it is not possible to know the model of the environment beforehand. We therefore look at methods which do not need models.
 
 There exists both model-free prediction and model-free control Reinforcement Learning techniques.
 Model-free \textbf{prediction \textit{evaluates}} the value function of an unknown MDP.
 While Model-free \textbf{control \textit{optimizes}} the value function of an unknown MDP.
-We will only look at model-free control.
 
 There are two ways that model-free control can be implemented:
 
@@ -88,3 +90,57 @@ Learning characteristics of a policy $\pi$ by sampling from $\pi$
 
 \textbf{Off-policy learning:}
 Learn characteristics of policy $\pi$ by sampling another policy $\mu$
+
+\subsection{Model-free prediction}
+\subsubsection{Monte-Carlo Policy evaluation}
+Monte-Carlo policy evaluation works as follows:
+When time step t and state s is reached we increment a running counter N(s) = N(s)+1. This can be done in two ways, one being only incrementing N(s) the \textit{first} time state s is reached or incrementing N(s) \textit{every} time states s is reached.
+
+Then we increment the total reward to S(s) =  S(s) + $G_t$.
+
+Finally we calculate the value function $V(s)=\frac{S(s)}{N(s)}$
+
+Then V(s) $\to V_\pi(s)$ as N(s) $\to \infty$
+
+In order to incrementally do Monte-Carlo updates,an incremental mean $u_k$ is used. The derivation for $u_k$ from a standard mean is as follows:
+\begin{align}
+	u_k &= \frac{1}{k}\sum_{j=1}^{k}x_j\\
+	&= \frac{1}{k}(x_k + \sum_{j=1}^{k-1}x_j)\\
+	&= \frac{1}{k}(x_k +(k-1)u_{k-1})\\
+	&= u_{k-1} + \frac{1}{k}(x_k - u_{k-1})
+	\label{eq:u_k}
+\end{align}
+The variable that we are averaging over is V(s) hence $V(s)=u_{k-1}$ and the counter $N(s)=k$ in equation \ref{eq:u_k}. The return $G_t =x_k$. Hence at every time t:
+
+\begin{align}
+	N(S_t) &= N(S_t) + 1 \\
+	V(S_t) &= V(S_t) + \frac{1}{N(S_t)}(G_t - V(S_t))
+\end{align}
+It can be useful to forget old states by making $N(S_t)$ a constant $\alpha$ as follows:
+\[V(S_t) = V(S_t) + \alpha(G_t - V(S_t))\]
+
+\subsubsection{Temporal Difference (TD) Learning}
+
+
+\subsection{Model-free control}
+
+When we previously used greedy policy improvement over the value function V(s) we had in equation \ref{pi'}:
+\[\pi^{'}(s) = \max\limits_{a \in A}(R^{a}_s+\gamma\sum_{s'\in S}P^{a}_{ss'}v_*(s'))\]
+Now for greedy policy improvement over the state action function Q(s,a) we have that:
+\begin{equation}
+	\pi^{'}(s) = \max\limits_{a \in A}Q(s,a)
+\end{equation}
+Which means that we now maximize not only across the action set as in equation \ref{pi'}, but rather the entire state-action set when using model-free policy iteration.
+
+However there now arises a problem when always having the agent act greedily. Which is that the agent will always take the same path no matter whether another path might have been better in the long term. To overcome this limitation of we bring in the topic of $\epsilon$-Greedy exploration.
+
+To ensure that the agent explores occasionally instead of always taking the greedy action, let the agent act randomly with a probability $\epsilon$. This can mathematically be expressed as:
+\begin{align}
+	\pi(a|s)=\begin{cases}
+		\frac{\epsilon}{m}+1, & \text{if $a^* = \argmax\limits_{a \in A}Q (s,a)$}\\
+		\frac{\epsilon}{m}, & \text{otherwise}
+	\end{cases}
+	\label{eq:pi_epsilon-greedy}
+\end{align}
+One can note that equation \ref{eq:pi_epsilon-greedy} is a variation of equation \ref{eq:pi_*}.
+
