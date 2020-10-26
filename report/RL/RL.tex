@@ -17,10 +17,10 @@ There are two properties that must be met for a problem to be solvable via Dynam
 Markov decision processes satisfies both of these conditions. The Bellman equation provides a recursive decomposition which fulfills the Optimal substructure property. While the value function caches and reuses solutions satisfying the Overlapping sub-problems condition. \cite{David_Silver}\\
 
 \subsection{Iterative Policy Evaluation}
-In order to evaluate the value that a certain policy has, we use a method called \textit{Iterative Policy Evaluation}. Figure \ref{fig:iterative_policy_evaluation} shows the mathematics which describes Iterative Policy Evaluation in both summation and vector form. What the diagram  at the top of Figure \ref{fig:iterative_policy_evaluation} represents is the value function being calculated for an action 'a' to an intermediary state represented by the black dot. The environments reaction is then also accounted for from the intermediary state to state s' resulting in reward r. The environments information is contained in the transition probability matrix $P^\pi$.
+In order to evaluate the value that a certain policy has, we use a method called \textit{Iterative Policy Evaluation}. Figure \ref{fig:iterative_policy_evaluation} shows the mathematics which describes Iterative Policy Evaluation in both summation and vector form. The diagram at the top of Figure \ref{fig:iterative_policy_evaluation} represents the value function being calculated for an action 'a' to an intermediary state represented by the black dot. The environments reaction is then also accounted for from the intermediary state to state s' resulting in reward r. The environments information is contained in the transition probability matrix $P^\pi$.
 
 We then use state s' as the new start state s and repeat the same calculation.
-The value function is updated continuously until the difference between $v^{k}$ and $v^{k+1}$ is determined negligible.
+The value function is updated continuously until the difference between $v^{k}$ and $v^{k+1}$ is determined negligible. This process is known as Iterative Policy Evaluation.
 
 \begin{figure}
 	\centering
@@ -49,11 +49,9 @@ There are two separate uses for Dynamic Programming in Reinforcement Learning. T
 {\color{red} Maybe insert a flow diagram illustrating difference and similarity between prediction and control }
 
 These two methods of Dynamic programming are implemented via what is known as value iteration and policy iteration respectively.
-Figure \ref{fig:greedy_policy_iteration} shows how Greedy Policy Iteration works. A greedy policy is one which when followed, results in the maximum value function $v_\pi$. It is known that policy iteration converges which can also be seen in the diagram in Figure \ref{fig:greedy_policy_iteration} on the top left.\cite{sutton_barto}
+Figure \ref{fig:greedy_policy_iteration} shows how Greedy Policy Iteration works. A greedy policy is one which when followed, results in the maximum value function $v_\pi$. It is known that policy iteration converges which is represented in the diagram in Figure \ref{fig:greedy_policy_iteration} on the top left.\cite{sutton_barto}
 
 As is stated in Figure \ref{fig:greedy_policy_iteration} policy iteration works by continuously iterating between two steps, namely policy evaluation and policy improvement.
-
-
 For a given policy $\pi$ we improve the policy using the following two steps:\\\\
 \textbf{Step one} is \textit{Evaluating} the policy $\pi$ using equation \ref{bellmanv2}: \[v_{\pi}(s) = E_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1})|S_t = s]\]
 \textbf{Step two} is \textit{Improving} the policy by acting greedy with respect to $v_\pi$ to obtain a new policy $\pi^{'}$:
@@ -102,7 +100,7 @@ Finally we calculate the value function $V(s)=\frac{S(s)}{N(s)}$
 
 Then V(s) $\to V_\pi(s)$ as N(s) $\to \infty$
 
-In order to incrementally do Monte-Carlo updates,an incremental mean $u_k$ is used. The derivation for $u_k$ from a standard mean is as follows:
+In order to incrementally do Monte-Carlo updates, an incremental mean $u_k$ is used. The derivation for $u_k$ from a standard mean is as follows:
 \begin{align}
 	u_k &= \frac{1}{k}\sum_{j=1}^{k}x_j\\
 	&= \frac{1}{k}(x_k + \sum_{j=1}^{k-1}x_j)\\
@@ -116,7 +114,7 @@ The variable that we are averaging over is V(s) hence $V(s)=u_{k-1}$ and the cou
 	N(S_t) &= N(S_t) + 1 \\
 	V(S_t) &= V(S_t) + \frac{1}{N(S_t)}(G_t - V(S_t))
 \end{align}
-It can be useful to forget old states by making $N(S_t)$ a constant $\alpha$ as follows:
+It can be useful to forget old states by making $\frac{1}{N(S_t)}$ a constant $\alpha$ as follows:
 \begin{equation}
 	V(S_t) = V(S_t) + \alpha(G_t - V(S_t))
 	\label{eq:monte_carlo}
@@ -132,19 +130,19 @@ The simplest form of TD is replacing the return $G_t$ in equation \ref{eq:monte_
 	V(S_t) = V(S_t) + \alpha({\color{red}R_{t+1} +  \gamma V(S_{t+1})} - V(S_t))
 	\label{eq:monte_carlo_TD}
 \end{equation}
-${\color{red}R_{t+1} +  \gamma V(S_{t+1})}$ is known as the TD target, the value which $V(S_t)$ tends to as $t \to \infty$.
-${\color{red}R_{t+1} +  \gamma V(S_{t+1})} - V(S_t)$ is known as the TD error. The aim of TD is to reduce the TD error to zero and update $V(S_t)$ to the estimated return ${\color{red}R_{t+1} +  \gamma V(S_{t+1})}$.
+$[{\color{red}R_{t+1} +  \gamma V(S_{t+1})}]$ is known as the TD target, the value which $V(S_t)$ tends to as $t \to \infty$.
+$[{\color{red}R_{t+1} +  \gamma V(S_{t+1})} - V(S_t)]$ is known as the TD error. The aim of TD learning is to reduce the TD error to zero and update $V(S_t)$ to the estimated return ${\color{red}R_{t+1} +  \gamma V(S_{t+1})}$.
 \begin{figure}[!htb]
 	\centering
 	\begin{subfigure}{.5\textwidth}
 		\centering
-		\includegraphics[width=0.5\linewidth]{RL/fig/mc_backup.png}
+		\includegraphics[width=1\linewidth]{RL/fig/mc_backup.png}
 		\caption{Monte Carlo backup\cite{David_Silver}}
 		\label{fig:monte_carlo_backup}
 	\end{subfigure}
 	\begin{subfigure}{.49\textwidth}
 	\centering
-	\includegraphics[width=0.5\linewidth]{RL/fig/mctd_backup.png}
+	\includegraphics[width=1\linewidth]{RL/fig/mctd_backup.png}
 	\caption{Temporal difference backup\cite{David_Silver}}
 	\label{fig:monte_carlo_TD_backup}
 	\end{subfigure}
@@ -168,7 +166,7 @@ $G_{t}^{(n)}$ for a few values of n as follows:\\
 	n &= 2 : G_{t}^{(2)} = R_{t+1}+ \gamma R_{t+2}+\gamma^2 V(S_{t+2}) \\
 	{\color{red}(MC)} n &= \infty : G_{t}^{(\infty)} = R_{t+1}+ \gamma R_{t+2}+...+\gamma^{T-1} R_T \label{eq:mc_td}
 \end{align}
-Figure \ref{fig:monte_carlo_backup} corresponds to equation \ref{eq:monte_carlo} and \ref{eq:td}. While Figure \ref{fig:monte_carlo_TD_backup} to equation \ref{eq:monte_carlo_TD} and \ref{eq:mc_td}. We now define n-step TD as:
+Figure \ref{fig:monte_carlo_backup} corresponds to equations \ref{eq:monte_carlo} and \ref{eq:td}. While Figure \ref{fig:monte_carlo_TD_backup} is related to equation \ref{eq:monte_carlo_TD} and \ref{eq:mc_td}. We now define n-step TD as:
 \begin{equation}
 	V(S_t) = V(S_t) + \alpha(G_t^{(n)} - V(S_t))
 	\label{eq:n_step_TD}
@@ -181,12 +179,13 @@ When we previously used greedy policy improvement over the value function V(s) w
 Now for greedy policy improvement over the state action function Q(s,a) we have that:
 \begin{equation}
 	\pi^{'}(s) = \max\limits_{a \in A}Q(s,a)
+	\label{eq:pi'}
 \end{equation}
-Which means that we now maximize not only across the action set as in equation \ref{pi'}, but rather the entire state-action set when using model-free policy iteration.
+Which means that we now maximize not only across the action set as in equation \ref{pi'}, but rather the entire state-action set when using model-free policy iteration. One should notice that to find the optimal policy we no longer need a model of the environment. In other words there is no dependency on the probability matrix $P^{a}_{ss'}$ as seen in equation \ref{eq:pi'}.
 
-However there now arises a problem when always having the agent act greedily. Which is that the agent will always take the same path no matter whether another path might have been better in the long term. To overcome this limitation of we bring in the topic of $\epsilon$-Greedy exploration.
+However there now arises a problem when always having the agent act greedily. Which is that the agent will always take the same path no matter whether another path might have been better in the long term. To overcome this limitation we bring in the topic of $\epsilon$-Greedy exploration.
 
-To ensure that the agent explores occasionally instead of always taking the greedy action, let the agent act randomly with a probability $\epsilon$. This can mathematically be expressed as:
+To ensure that the agent explores occasionally instead of always taking the greedy action, we let the agent act randomly with a probability $\epsilon$. This can mathematically be expressed as:
 \begin{align}
 	\pi(a|s)=\begin{cases}
 		\frac{\epsilon}{m}+1, & \text{if $a^* = \argmax\limits_{a \in A}Q (s,a)$}\\
@@ -197,5 +196,64 @@ To ensure that the agent explores occasionally instead of always taking the gree
 One can note that equation \ref{eq:pi_epsilon-greedy} is a variation of equation \ref{eq:pi_*}.
 
 \subsubsection{SARSA}
+\begin{figure}[!htb]
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=1\linewidth]{RL/fig/sarsa_state_diagram.png}
+		\caption{SARSA state diagram representation\cite{David_Silver}}
+		\label{fig:sarsa_state_diagram}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[width=1\linewidth]{RL/fig/sarsa_on_policy_control.png}
+		\caption{SARSA on policy control diagram\cite{David_Silver}}
+		\label{fig:sarsa_on_policy}
+	\end{subfigure}
+	\begin{subfigure}{1\textwidth}
+		\centering
+		\includegraphics[width=1\linewidth]{RL/fig/sarsa_algorithm.jpeg}
+		\caption{SARSA algorithm\cite{David_Silver}}
+		\label{fig:sarsa_algorithm}
+	\end{subfigure}
+	\caption{SARSA diagrams \cite{David_Silver}}
+	\label{fig:sarsa}	
+\end{figure}
+In Figure \ref{fig:sarsa_state_diagram} the concept of the State-Action-Reward-State-Action is graphically shown. For every state action pair, we can calculate the q-function using the same concept as TD learning as follows:
 
+\begin{equation}
+	Q(S,A) = Q(S,A) + \alpha[R+\gamma Q(S',A') - Q(S,A)]
+	\label{eq:sarsa_update}
+\end{equation}
+Where $R+\gamma Q(S',A')$ is the TD target. In Figure \ref{fig:sarsa_on_policy} we see that the way SARSA learns the optimal policy $\pi_{*}$ is not by completely following policy $\pi$. But instead by stopping somewhere in between which can be seen by the arrows stopping in the middle of the two lines for Q and $\pi$. If Monte Carlo was instead used to learn the optimal policy $\pi_{*}$ we would have a diagram similar to \ref{fig:greedy_policy_iteration}, where the entire episode has to play out before the algorithm updates.
+We can also define n-step Q-return:
+\begin{equation}
+	q_{t}^{(n)} = R_{t+1} + \gamma R_{t+2} +...+ \gamma^{n-1}R_{t+n}+\gamma^{n}Q(S_{t+n})
+	\label{eq:q_return}
+\end{equation}
+The goal of n-step SARSA is to update Q(s,a) towards the n-step Q-return $q_t^{(n)}$.
+\begin{equation}
+	Q(S_t,A_t) = Q(S_t,A_t) + \alpha[q_{t}^{(n)} - Q(S_t,A_t)]
+	\label{eq:sarsa_n_step}
+\end{equation}
+When we have n = 1 then we have SARSA updates and at n = $\infty$ we have Monte Carlo updates. All values of n $\in [1,\infty]$ is between SARSA and Monte Carlo.
+Figure \ref{fig:sarsa_algorithm} shows the algorithm that can be used to implement SARSA. Later in chapter \ref{chap:Experiments_and_Results} we will implement this algorithm which will make the concept clearer.
 \subsubsection{Q-learning}
+\begin{figure}[!htb]
+	\begin{subfigure}{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\linewidth]{RL/fig/q_learning_state_diagram.png}
+		\caption{Q-learning state action diagram\cite{David_Silver}}
+		\label{fig:q_learning_state_action_diagram}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\centering
+		\includegraphics[width=1\linewidth]{RL/fig/q_learning_algorithm.png}
+		\caption{Q-learning algorithm\cite{David_Silver}}
+		\label{fig:q_learning_algorithm}
+	\end{subfigure}
+	\caption{Q-learning state-action diagram and algorithm}
+	\label{Q-learning}
+\end{figure}
+What we have been dealing with up to now in this chapter dealt with on-policy learning.
+We now move to describe Q-learning which falls under off policy learning. By comparing Figure \ref{fig:q_learning_state_action_diagram} and Figure \ref{fig:sarsa_state_diagram}, we can see that the only difference between Q-learning and SARSA is that Q-learning takes the action A' which gives the maximum Q-return. Where the Q-return was earlier defined in equation \ref{eq:q_return}.
+Then in Figure \ref{fig:q_learning_algorithm} we see the Q-learning algorithm which can be seen to be very similar to the SARSA algorithm in Figure \ref{fig:sarsa_algorithm}.
