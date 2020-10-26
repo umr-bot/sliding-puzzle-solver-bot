@@ -6,11 +6,15 @@
 \section{Problem Statement and Project Objective}
 In robotics, a manipulator (ie. a robotic arm) is a device used to manipulate objects in its environment. When the manipulation task is relatively complex, it is often difficult or even impossible for a human to direct how the robot should act. One possible solution is that the robot learn by itself which actions are best, which can be done through reinforcement learning. A popular method for doing developing reinforcement learning algorithms for robotics is to first solve similar, less complex problems.
 
-In this project reinforcement learning is used to solve sliding puzzle. An example of a sliding puzzle being solved can be seen in Figure \ref{fig:sliding_puzzle_figs}. The objective of this project is to solve a shuffled puzzle with the minimum amount of moves using reinforcement learning. The rules of the game are explained in the next section, . 
+In this project reinforcement learning is used to solve sliding puzzle. An example of a sliding puzzle being solved can be seen in Figure \ref{fig:sliding_puzzle_figs}. The objective of this project is to solve a shuffled puzzle with the minimum amount of moves using reinforcement learning. The rules of the game are explained in the next section. 
 
 \section{Background}
 
-The sliding puzzle is a game with a history dating back to the 1870's. Many solutions have been thought up to solve such puzzles, which include using search algorithms\cite{search_alg}. The rules of the game are that the only tiles that can move are the ones next to the tile with no number, known as the 'blank tile'. Additionally only one tile can be moved at a time. The final puzzle configuration is shown in \ref{fig:sfig4}, where all the tiles are placed in ascending order read left to right and top to bottom. The aim of the game is to arrange a shuffled puzzle into the final puzzle configuration by moving one tile at a time.
+The sliding puzzle is a game with a history dating back to the 1870's \cite{15_puz}. The game consists of $N^{2}-1$ tiles arranged on an NxN grid with one empty tile. The tiles are numbered 1 to N. A possible configuration of a 3x3 puzzle is shown in Figure \ref{fig:sfig1}. The puzzles state can be changed by sliding one of the numbered tiles, next to the empty tile, into the place of the empty tile. The empty tile then takes the place of the numbered tile. This can visually be seen between Figures \ref{fig:sfig1}
+and \ref{fig:sfig2} where tile number 6 moves right in the transition between Figures \ref{fig:sfig1}
+and \ref{fig:sfig2}. We will denote the action that can occur in a certain state by the possible movements the empty tile can move. Which will be defined as $A_s = {up, down, left, right}$.
+
+The sliding puzzle is a game with a history dating back to the 1870's \cite{15_puz}. Many solutions have been thought up to solve such puzzles, which include using search algorithms\cite{search_alg}. The rules of the game are that the only tiles that can move are the ones next to the tile with no number, known as the 'blank tile'. Additionally only one tile can be moved at a time. The final puzzle configuration is shown in \ref{fig:sfig4}, where all the tiles are placed in ascending order read left to right and top to bottom. The aim of the game is to arrange a shuffled puzzle into the final puzzle configuration by moving one tile at a time.
 
 \begin{figure}[!htb]
 	\centering
@@ -43,14 +47,13 @@ The sliding puzzle is a game with a history dating back to the 1870's. Many solu
 \end{figure}
 
 \section{Document Outline} 
-Chapter \ref{chap:Literature_Review} looks at a paper which used an alternate approach to solve a 16 tile sliding puzzle.
+In Chapter \ref{chap:Literature_Review} we will look at a paper which used an alternate approach to solve a 16 tile sliding puzzle.
+Chapter \ref{chap:MDP} describes in detail theory relating to Markov decision processes.
+Chapter \ref{chap:RL} discusses in detail the dynamic programming and reinforcement learning techniques which will be used to solve our puzzle problem.
 
-Chapter \ref{chap:MDP} describes in detail the mathematical background theory which forms the basis for Reinforcement Learning.
+In Chapter \ref{chap:System_Design} the theory of reinforcement learning is applied to solve sliding puzzles. In the same chapter we 
 
-Chapter \ref{chap:RL} discusses in detail the Reinforcement Learning techniques which will be used to solve our puzzle problem.
-
-Chapter \ref{chap:System_Design} lays out the overarching view of the software system, broken down into functional blocks.
+{\color{red}Rather how you used the theory of RL to design the solution to the sliding puzzle problem. Do this mathematically. Talk about things like the size of the state space, the sequential agents that you trained, how you decided on algorithms or hyperparameters.}
 
 Chapter \ref{chap:Experiments_and_Results} contains tests and verification that our solution works using the results of various experiments.
-
 Chapter \ref{chap:conclusion} concludes the report.

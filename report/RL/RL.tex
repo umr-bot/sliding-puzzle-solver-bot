@@ -117,11 +117,63 @@ The variable that we are averaging over is V(s) hence $V(s)=u_{k-1}$ and the cou
 	V(S_t) &= V(S_t) + \frac{1}{N(S_t)}(G_t - V(S_t))
 \end{align}
 It can be useful to forget old states by making $N(S_t)$ a constant $\alpha$ as follows:
-\[V(S_t) = V(S_t) + \alpha(G_t - V(S_t))\]
+\begin{equation}
+	V(S_t) = V(S_t) + \alpha(G_t - V(S_t))
+	\label{eq:monte_carlo}
+\end{equation}
+
 
 \subsubsection{Temporal Difference (TD) Learning}
+Temporal difference (TD) learning is a technique used to predict the value of a signals future state.
 
+The aim of TD learning is to learn a value function $v_\pi$ from experience of following policy $\pi$. 
+The simplest form of TD is replacing the return $G_t$ in equation \ref{eq:monte_carlo} as follows:
+\begin{equation}
+	V(S_t) = V(S_t) + \alpha({\color{red}R_{t+1} +  \gamma V(S_{t+1})} - V(S_t))
+	\label{eq:monte_carlo_TD}
+\end{equation}
+${\color{red}R_{t+1} +  \gamma V(S_{t+1})}$ is known as the TD target, the value which $V(S_t)$ tends to as $t \to \infty$.
+${\color{red}R_{t+1} +  \gamma V(S_{t+1})} - V(S_t)$ is known as the TD error. The aim of TD is to reduce the TD error to zero and update $V(S_t)$ to the estimated return ${\color{red}R_{t+1} +  \gamma V(S_{t+1})}$.
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=0.5\linewidth]{RL/fig/mc_backup.png}
+		\caption{Monte Carlo backup\cite{David_Silver}}
+		\label{fig:monte_carlo_backup}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+	\centering
+	\includegraphics[width=0.5\linewidth]{RL/fig/mctd_backup.png}
+	\caption{Temporal difference backup\cite{David_Silver}}
+	\label{fig:monte_carlo_TD_backup}
+	\end{subfigure}
+	\caption{MC and TD visual representations using n-return \cite{David_Silver}}
+	\label{fig:MC_TD_backups}
+\end{figure}
 
+\begin{figure}[!htb]
+
+\end{figure}
+Figure \ref{fig:monte_carlo_backup} and \ref{fig:monte_carlo_TD_backup} shows the concepts of MC and TD learning visually presented. Mathematically we can show the relationship between MC and TD using the n-step return concept, which will now be described.
+
+Let the n-step return be defined as:
+\begin{equation}
+	G_{t}^{(n)} = R_{t+1} + \gamma R_{t+2} + ... + \gamma^{n-1}R_{t+n} + \gamma^{n}V(S_{t+1})
+\end{equation}
+For clarity we show 
+$G_{t}^{(n)}$ for a few values of n as follows:\\
+\begin{align}
+	 {\color{red}(TD)} n &= 1: G_{t}^{(1)} = R_{t+1}+\gamma V(S_{t+1}) \label{eq:td} \\
+	n &= 2 : G_{t}^{(2)} = R_{t+1}+ \gamma R_{t+2}+\gamma^2 V(S_{t+2}) \\
+	{\color{red}(MC)} n &= \infty : G_{t}^{(\infty)} = R_{t+1}+ \gamma R_{t+2}+...+\gamma^{T-1} R_T \label{eq:mc_td}
+\end{align}
+Figure \ref{fig:monte_carlo_backup} corresponds to equation \ref{eq:monte_carlo} and \ref{eq:td}. While Figure \ref{fig:monte_carlo_TD_backup} to equation \ref{eq:monte_carlo_TD} and \ref{eq:mc_td}. We now define n-step TD as:
+\begin{equation}
+	V(S_t) = V(S_t) + \alpha(G_t^{(n)} - V(S_t))
+	\label{eq:n_step_TD}
+\end{equation} 
+What we now have is a function with which we can choose when to update V(S), instead of always having it update at the end of the episode like MC. This is useful because we can correct mistakes made in the prediction earlier if n-step TD is used.
 \subsection{Model-free control}
 
 When we previously used greedy policy improvement over the value function V(s) we had in equation \ref{pi'}:
@@ -144,3 +196,6 @@ To ensure that the agent explores occasionally instead of always taking the gree
 \end{align}
 One can note that equation \ref{eq:pi_epsilon-greedy} is a variation of equation \ref{eq:pi_*}.
 
+\subsubsection{SARSA}
+
+\subsubsection{Q-learning}
