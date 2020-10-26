@@ -6,7 +6,7 @@
 To model reinforcement learning problems we use dynamic systems theory, specifically incompletely-known MDP's (Markov decision
 processes). In general RL problems can be described using MDP's. In Mathematics a MDP is a stochastic, discrete time controlled process.
 
-What this means is that a MDP is partially controlled and partially random. MDP's are dependent on the following variables, states, actions, state transition probability, reward and a discount factor\cite{sutton_barto}. These variables can be denoted in a 5-tuple as:
+What this means is that a MDP is partially controlled and partially random. MDP's are dependent on the following variables: states, actions, state transition probability, reward and a discount factor\cite{sutton_barto}. These variables can be denoted in a 5-tuple as:
 \[(S,A,P^{a}_{ss'},R^{a}_{s},\gamma)\] where
 \begin{itemize}
 	\item S is a finite set of states
@@ -95,7 +95,7 @@ We now define what is known as the optimal policy, which is essentially a set of
 	\end{cases}
 	\label{eq:pi_*}
 \end{align}
-There always exists an optimal deterministic policy for any MDP \cite{sutton_barto}. We only need to know $q_* (s,a)$ to know the optimal policy. This is important because the optimal policy describes to us how the agent must move to maximize its rewards, which is precisely the goal of RL. Figure \ref{fig:q*} shows an example MDP displaying how $q_* (s,a)$ works. The red path lines indicate the optimal path/policy in Figure \ref{fig:q*}.
+There always exists an optimal deterministic policy for any MDP \cite{sutton_barto}. We only need to know $q_* (s,a)$ to know the optimal policy. This is important because the optimal policy describes to us how the agent must move to maximize its rewards, which is precisely the goal of RL. Figure \ref{fig:q*} shows an example MDP displaying how $q_* (s,a)$ works. The red path lines indicate the optimal policy in Figure \ref{fig:q*}.
 
 We now finally define what is know as the Bellman \textit{Optimality} Equations which is a specific form of equation \ref{bellmanv1} and \ref{bellmanv2} which are:
 \begin{equation}

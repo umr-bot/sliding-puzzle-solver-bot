@@ -46,7 +46,6 @@ There are two separate uses for Dynamic Programming in Reinforcement Learning. T
 	\item The prediction method uses $(S,A,P,R,\gamma)$ and a policy $\pi$ as input, while it outputs a value function $v_\pi$.
 	\item The control method only takes $(S,A,P,R,\gamma)$ as input and outputs the optimal value function $v_*$ and optimal policy $\pi_{*}$.
 \end{itemize}
-{\color{red} Maybe insert a flow diagram illustrating difference and similarity between prediction and control }
 
 These two methods of Dynamic programming are implemented via what is known as value iteration and policy iteration respectively.
 Figure \ref{fig:greedy_policy_iteration} shows how Greedy Policy Iteration works. A greedy policy is one which when followed, results in the maximum value function $v_\pi$. It is known that policy iteration converges which is represented in the diagram in Figure \ref{fig:greedy_policy_iteration} on the top left.\cite{sutton_barto}
@@ -73,7 +72,6 @@ Figure \ref{fig:value_iteration} shows the mathematics that describes \textit{Va
 
 While Value Iteration calculates the maximum value function for a single action only. In this sense Value Iteration is a special case of Iterative Policy Evaluation.
 
-{\color{red} Can later place in appendix proof of policy iteration always converging. slide 19 (16/42) of David Silvers slides on Dynamic Programming}
 \section{Reinforcement Learning}
 What we have been discussing up to now all has had to do with using methods which required knowledge about the model. This knowledge was embedded in the probability transition matrix P. Often times this matrix P is extremely large making calculation times long. While at other times it is not possible to know the model of the environment beforehand. We therefore look at methods which do not need models.
 
