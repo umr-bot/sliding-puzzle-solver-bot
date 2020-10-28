@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
 import numpy as np
 import matplotlib.image as mpimg
-def save_fig(state,state_num):
+def save_fig(state,state_num, file_to_read='number images/'):
     im = []
     for block in state:
-        image = mpimg.imread('number images/'+str(block)+'.png')
+        image = mpimg.imread(file_to_read+str(block)+'.png')
         im.append(image)
 #    im1 = mpimg.imread("number images/1.png")
 #    im2 = mpimg.imread("number images/2.png") 

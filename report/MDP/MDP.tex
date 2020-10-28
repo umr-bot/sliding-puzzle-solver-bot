@@ -2,92 +2,103 @@
 
 \chapter{Markov Decision Processes}
 \label{chap:MDP}
+\section{Introduction}
 
-To model reinforcement learning problems we use dynamic systems theory, specifically incompletely-known MDP's (Markov decision
-processes). In general RL problems can be described using MDP's. In Mathematics a MDP is a stochastic, discrete time controlled process.
-
-What this means is that a MDP is partially controlled and partially random. MDP's are dependent on the following variables: states, actions, state transition probability, reward and a discount factor\cite{sutton_barto}. These variables can be denoted in a 5-tuple as:
-\[(S,A,P^{a}_{ss'},R^{a}_{s},\gamma)\] where
+In order to describe reinforcement learning techniques, we first have to have a way of mathematically defining reinforcement learning problems. In this chapter, we do so by formally introduce the concept of Markov decision processes (MDPs). This chapter introduces the key concepts required to address the reinforcement learning problem. These concepts includes, state and action space, returns, value functions and Bellman equations.
+The majority of the theory discussed in this chapter is based on the work by Sutton and Barto \cite{sutton_barto}.
+\section{Definition of a MDP}
+A Markov decision process is a stochastic, discrete, time controlled process. What this means is that a MDP is a partially controlled and partially random process \cite{sutton_barto}.
+In general RL problems can be described using MDPs \cite{David_Silver}. 
+Paul Weng states that, MDP's are described by the following: state-space S, action-space A, state transition probability $P^{a}_{ss'}$, reward function $R^{a}_{s}$ and discount factor $\gamma$\cite{MDP_Paul_Weng}. These variables can be denoted in a 5-tuple as
+\begin{equation}
+	(S,A,P^{a}_{ss'},R^{a}_{s},\gamma)
+\end{equation}
+ where,
 \begin{itemize}
-	\item S is a finite set of states
-	\item A is a finite set of actions
-	\item $P^{a}_{ss'}$ is a matrix of probabilities with $P^{a}_{ss'} = P(S_{t+1} = s' | S_t = s,A_t = a) $
-	\item $R^{a}_{s}$ is the immediate reward after transitioning from state s to s' using action a. Where $R^{a}_{s} = E[R_{t+1}|S_t =s, A_t =a]$
+	\item S is a finite set of states with state s $\in$ S
+	\item A is a finite set of actions with action a $\in$ A
+	\item $P^{a}_{ss'}$ is a matrix of probabilities which predicts the next state s', where\\ $P^{a}_{ss'} = P(S_{t+1} = s' | S_t = s,A_t = a) $
+	\item $R^{a}_{s}$ is the immediate reward after transitioning from state s to s' using action a, where $R^{a}_{s} = E[R_{t+1}|S_t =s, A_t =a]$
 	\item $\gamma$ $\in$ [0,1] is the discount factor applied to the reward
 \end{itemize}
+In an MDP, the assumption is that all the states have the Markov property \cite{sutton_barto}. This means that
+\begin{equation}
+	P[S_{t+1}|S_{t}] = P[S_{t+1}|S_{1},...,S_{t}].
+\end{equation}
+In other words, the probability of transitioning to state $S_{t+1}$ given state $S_t$, must be equal to the probability of transitioning to state $S_{t+1}$ given all states $S_1$ to $S_t$. This means that the current state is required to contain all the information of the previous states.
 
-For a state to be Markov it needs to satisfy the following condition:
-\[P[S_{t+1}|S_{t}] = P[S_{t+1}|S_{1},...,S_{t}]\]
+\section{Value function and policies}
+The return $G_t$ is the total sum of the reward at each time step, multiplied by a constant diminishing factor $\gamma$.
+The discount $\gamma$ $\in$ [0,1] determines the present value of future reward $R_{t}$.
 
-In words this reads as, the probability of transitioning to state $S_{t+1}$ given state $S_t$, must be equal to the probability of transitioning to state $S_{t+1}$ given all states $S_1$ to $S_t$. This means that the current state is required to contain all the information of the previous states. For a MDP all states must be Markov.
-
-We now define the definition which is the total discounted reward from time-step t, named the return $G_t$ where:
 \begin{align}
-	G_t &= R_{t+1}+\gamma R_{t+2} +\gamma^2 R_{t+3}+ ... \\
+	G_t &= R_{t+1}+\gamma R_{t+2} +\gamma^2 R_{t+3}+ ... \nonumber\\
 	&= \sum_{k=0}^{\infty}\gamma^{k} R_{t+k+1}
 	\label{eq:G_t}
 \end{align}
 
-The discount $\gamma$ $\in$ [0,1] determines the present value of future rewards. For $\gamma=0$ the return $G_t$ only depends on the current reward that can be obtained in the next step $R_{t+1}$. Which can be said to be "short-sighted". While for $\gamma=1$ the return depends on all the rewards that are projected to be obtained until the process terminates. This can be said to be "far-sighted". The larger $\gamma$ is, the more the rewards of later steps closer to the terminating state affects the return.\cite{sutton_barto}
-What we can also note is that using a discount factor makes the return finite because $R_{t+k+1}$ is finite and:
-\[ \sum_{k=0}^{\infty}\gamma^{k}=\frac{1}{1-\gamma}\]
-\centerline{which is finite for $\gamma$ $\in$ [0,1].}
-
-We now define another important definition, namely the state value function v(s) where:
-\[v(s) = E[G_t | S_t = s]\]
-Which in words means that the state value function v(s) is the expected return given that the agent is in state s at time-step t.
-We now decompose v(s) so that it becomes a recursive function as follows:
+For $\gamma=0$, the return $G_t$ only depends on the single reward that can be obtained in the next step, namely $R_{t+1}$. When $\gamma=0$ the return $G_t$ is 'short-sighted'. For $\gamma=1$ on the other hand, the return depends on all the rewards that are projected to be obtained until the process terminates. $G_t$ is thus "far-sighted" for $\gamma=1$ \cite{sutton_barto}.
+What can also note is that using a discount factor between 0 and 1 makes the return finite because $R_{t+k+1}$ is finite and
+\begin{equation}
+	\sum_{k=0}^{\infty}\gamma^{k}=\frac{1}{1-\gamma}\hspace{5pt},
+\end{equation}
+which is finite for $\gamma$ $\in$ [0,1]. \\
+The probability that the agent will choose a specific action given the state is called its policy $\pi(a|s)$. Mathematically this is defined as
+\begin{equation}
+	\pi(a|s) = P[A_t = a, S_t = s].
+\end{equation}
+Another important definition is the value function v(s) defined as
+\begin{equation}
+	v(s) = E[G_t | S_t = s].
+\end{equation}
+This equation shows that the value function v(s) is the expected return given that v(s) is evaluated in state s at time-step t.
+\section{Bellman Expectation Equation}
+Sutton and Barto \cite{sutton_barto} further decomposes v(s) so that it becomes a recursive function as follows
 \begin{align}
 	v(s) &= E[G_t | S_t = s]\\
 	&= E[R_{t+1} + \gamma R_{t+2} + \gamma^{2} R_{t+3} + ...|S_t = s]\\
 	&= E[R_{t+1} + \gamma (R_{t+2} + \gamma R_{t+3} + ...)|S_t = s]\\
 	&= E[R_{t+1} + \gamma G_{t+1}|S_t = s]\\
-	&= E[R_{t+1} + \gamma v(S_{t+1})|S_t = s]
+	&= E[R_{t+1} + \gamma v(S_{t+1})|S_t = s].
 	\label{bellmanv1}
 \end{align}
-This means that v(s) only depends on $R_{t+1}$ the reward it can incur in the next step and $\gamma v(S_{t+1})$ the discounted state function at time t+1.
-What we have defined in equation \ref{bellmanv1} is known as the Bellman Equation.\cite{sutton_barto}
+This means that v(s) only depends on $R_{t+1}$ (the reward that can be obtained in the next step) and $\gamma v(S_{t+1})$, the discounted value function at time t+1.
+What has been defined in equation \ref{bellmanv1} is known as the Bellman equation.\cite{sutton_barto}
+Sutton and Barto then defines the value function given that the agent follows the policy $\pi$ as
+\begin{equation}
+	v_{\pi}(s) = E_{\pi}[G_t | S_t = s].
+\end{equation}
+Additionally, they define the action-value function (q-function),
+\begin{equation}
+	q_{\pi}(s,a) = E_{\pi}[G_t | S_t = s,A_t = a].
+\end{equation}
+The q-function is defined as the expected return of taking action a from state s and thereafter following policy $\pi$. What can be noted is that v(s) is a prediction of what the value for being in a certain state is, which is related to planning. While q(s,a) is the value for being in a certain state and taking an action, which relates to control. 
 
-The probability an agent takes a certain of action given it is in a given state is defined as a policy $\pi(a|s)$. It is defined as:
-\[\pi(a|s) = P[A_t = a, S_t = s]\]
-
-Then we can now define the state value function following policy $\pi$ as:
-\[v_{\pi}(s) = E_{\pi}[G_t | S_t = s]\]
-Additionally we define the action-value function also known as a q-function as:
-\[q_{\pi}(s,a) = E_{\pi}[G_t | S_t = s,A_t = a]\]
-The q-function is defined as the expected return taking action a from state s thereafter following policy $\pi$. What can be noted is that v(s) is a prediction of what the value for being in a certain state is. While q(s,a) is the value for being in a certain state and taking a action, which has to do with control compared to v(s) which has to do with planning. 
-
-Once again we can decompose the state value and also action value functions to be in the form of the Bellman Equation in equation \ref{bellmanv1}. This results in the Bellman \textit{Expectation} equations:
+Once again, Sutton and Barto \cite{sutton_barto} decomposes the state-value and action-value functions to be in the form of the Bellman Equation in equation \ref{bellmanv1}. This results in the Bellman \textit{expectation} equations
 \begin{align}
 	v_{\pi}(s)	&= E_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1})|S_t = s]\\
 	&= \sum_{a'\in A}\pi(a|s)(R^{a}_s+\gamma\sum_{s'\in S}P^{a}_{ss'}v_\pi(s'))
 	\label{bellmanv2}
 \end{align}
+and
 \begin{align}
 	q_{\pi}(s,a)	&= E_{\pi}[R_{t+1} + \gamma q_{\pi}(S_{t+1},A_{t+1})|S_t = s,A_t = a]\\
-	&= R^{a}_s +\gamma \sum_{s'\in S}P^{a}_{ss'}\sum_{a'\in A}\pi(a'|s')q_\pi(s',a')
+	&= R^{a}_s +\gamma \sum_{s'\in S}P^{a}_{ss'}\sum_{a'\in A}\pi(a'|s')q_\pi(s',a').
 	\label{bellmanq}
 \end{align}
-
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=1\linewidth]{Literature_Review/fig/q*_student_MDP.png}
-	\caption{Graph of an example MDP showing how q values work\cite{David_Silver}}
-	\label{fig:q*}
-	\centering
-\end{figure}
-The Bellman Expectation equations can also then be put into matrix form from equation \ref{bellmanv2} for vector calculation as:
+Equation \ref{bellmanv2} can be placed into vector form as:
 \begin{equation}
 	v_\pi = R^{\pi} + \gamma P^{\pi}v_\pi
 \end{equation}
 Which has the solution:
 \begin{equation}
-	v_\pi = (1 - \gamma P^{\pi})^{-1}R^{\pi}
+	v_\pi = (I - \gamma P^{\pi})^{-1}R^{\pi}
 	\label{bellman_matrix_form}
 \end{equation}
-Equation \ref{bellman_matrix_form} is a fast and concise formula which is easily implemented in code, but has the drawback of only working for small state spaces. This is due to the fact that the calculation requires the entire transition matrix $P^\pi$ to be loaded into memory at every calculation step.
+Equation \ref{bellman_matrix_form} is a concise formula which is easily implemented in code, with an example implementation shown in {\color{red} \huge{INSERT GRID WORLD EXAMPLE HEREE}}
 
-We now define what is known as the optimal policy, which is essentially a set of state and action pairs which lead to the maximum $q_\pi(s,a)$ as:
+\section{Optimal Policies and Bellman Optimality Equations}
+Sutton and Barto now defines what is known as the optimal policy, which is essentially a set of state and action pairs which leads to the maximum value of $q_\pi(s,a)$ as:
 \begin{align}
 	\pi_{*}(a|s)=\begin{cases}
 		1, & \text{if a = $\argmax\limits_{a \in A}q_* (s,a)$}\\
@@ -95,16 +106,18 @@ We now define what is known as the optimal policy, which is essentially a set of
 	\end{cases}
 	\label{eq:pi_*}
 \end{align}
-There always exists an optimal deterministic policy for any MDP \cite{sutton_barto}. We only need to know $q_* (s,a)$ to know the optimal policy. This is important because the optimal policy describes to us how the agent must move to maximize its rewards, which is precisely the goal of RL. Figure \ref{fig:q*} shows an example MDP displaying how $q_* (s,a)$ works. The red path lines indicate the optimal policy in Figure \ref{fig:q*}.
-
-We now finally define what is know as the Bellman \textit{Optimality} Equations which is a specific form of equation \ref{bellmanv1} and \ref{bellmanv2} which are:
+There always exists an optimal deterministic policy for any MDP \cite{sutton_barto}. We only need to know $q_* (s,a)$ to know the optimal policy. This is important because the optimal policy describes which actions must be taken to maximize rewards, which is precisely the goal of RL.
+Sutton and Barto \cite{sutton_barto} then defines what is know as the Bellman \textit{optimality} equations.
 \begin{equation}
 	v_*(s) = \max\limits_{a}(R^{a}_s+\gamma\sum_{s'\in S}P^{a}_{ss'}v_*(s'))
 	\label{bellmanv*}
 \end{equation}
+and
 \begin{equation}
-	q_*(s,a) = R^{a}_s +\gamma \sum_{s'\in S}P^{a}_{ss'}\max\limits_{a'}q_*(s',a')
+	q_*(s,a) = R^{a}_s +\gamma \sum_{s'\in S}P^{a}_{ss'}\max\limits_{a'}q_*(s',a').
 	\label{bellmanq*}
 \end{equation}
-What equation \ref{bellmanv*} represents is the maximum reward that can be obtained in state s. While equation \ref{bellmanq*} represents the maximum reward that can be obtained by taking action a from state s. The difference between the two is that equation \ref{bellmanv*} is a passive prediction of what value (according to reward that can be obtained) a state represents. While equation \ref{bellmanq*} is a calculation of the value of being in a state after an action 'a' is selected.
+What equation \ref{bellmanv*} represents is the maximum return that can be obtained from state s, when following the optimal policy $\pi_*$. Equation \ref{bellmanq*} represents the maximum return that can be obtained by taking action a state s and thereafter following the policy.
+At this point, we have outlined a mathematical background for reinforcement learning problems.
+In the next two chapters we will discuss methods of solving the MDP and obtaining the optimal state-value and action-value functions. 
 
