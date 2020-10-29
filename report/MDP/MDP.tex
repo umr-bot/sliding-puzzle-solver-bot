@@ -53,7 +53,7 @@ Another important definition is the value function v(s) defined as
 \end{equation}
 This equation shows that the value function v(s) is the expected return given that v(s) is evaluated in state s at time-step t.
 \section{Bellman Expectation Equation}
-Sutton and Barto \cite{sutton_barto} further decomposes v(s) so that it becomes a recursive function as follows
+Sutton and Barto \cite{sutton_barto} decomposes v(s) so that it becomes a recursive function as follows
 \begin{align}
 	v(s) &= E[G_t | S_t = s]\\
 	&= E[R_{t+1} + \gamma R_{t+2} + \gamma^{2} R_{t+3} + ...|S_t = s]\\
@@ -95,10 +95,11 @@ Which has the solution:
 	v_\pi = (I - \gamma P^{\pi})^{-1}R^{\pi}
 	\label{bellman_matrix_form}
 \end{equation}
-Equation \ref{bellman_matrix_form} is a concise formula which is easily implemented in code, with an example implementation shown in {\color{red} \huge{INSERT GRID WORLD EXAMPLE HEREE}}
+Equation \ref{bellman_matrix_form} is a concise formula which is easily implemented in code.
 
 \section{Optimal Policies and Bellman Optimality Equations}
-Sutton and Barto now defines what is known as the optimal policy, which is essentially a set of state and action pairs which leads to the maximum value of $q_\pi(s,a)$ as:
+Sutton and Barto now defines the optimal policy, which only has value 1 if the action the agent takes maximizes $q_*(s,a)$ \cite{sutton_barto}.
+This is mathematically defined as:
 \begin{align}
 	\pi_{*}(a|s)=\begin{cases}
 		1, & \text{if a = $\argmax\limits_{a \in A}q_* (s,a)$}\\
