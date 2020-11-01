@@ -5,9 +5,93 @@
 \section{Introduction}
 In the following section we will test the SARSA and Q-learning algorithms described in chapter \ref{chap:RL}. The way the tests will be conducted is by varying the hyper parameters. These hyper parameters include, the discount factor $\gamma$, epsilon the probability of choosing a random action and $\alpha$ the learning rate.
 
-The puzzle that we will solve is of size 3x3. The way in which it will be solved is by training separate agents to solve different parts of the puzzle. 
-\section{SARSA figs}
+The puzzle that we will solve is of size 3x3. The way in which it will be solved is by training separate agents to solve different parts of the puzzle.
+\begin{figure}[h!]
+	\begin{subfigure}[t]{.30\textwidth}
+		\centering
+		\includegraphics[width=0.5\linewidth]{Experiments_and_Results/fig/agents/solved_state_agent1.png}
+		\caption{First configuration that agent is trained to reach.}
+		\label{fig:solved_state_agent1}
+	\end{subfigure}
+	\begin{subfigure}[t]{.33\textwidth}
+		\centering
+		\includegraphics[width=0.5\linewidth]{Experiments_and_Results/fig/agents/solved_state_agent2.png}
+		\caption{Second configuration that agent is trained to reach. As long as the first tiles in the second and third row is not the blank, 2 or 3 numbered tiles, then the second configuration is solved.}
+		\label{fig:solved_state_agent2}
+	\end{subfigure}
+	\begin{subfigure}[t]{.33\textwidth}
+		\centering
+		\includegraphics[width=0.5\linewidth]{Experiments_and_Results/fig/agents/solved_state_agent3.png}
+		\caption{Third configuration is solved when 2 and 3 numbered tiles are in the first row as shown.}
+		\label{fig:solved_state_agent3}
+	\end{subfigure}
+	\begin{subfigure}[t]{.3\textwidth}
+		\centering
+		\includegraphics[width=0.5\linewidth]{Experiments_and_Results/fig/agents/solved_state_agent4.png}
+		\caption{Fourth configuration is solved when 4 and 7 numbered tiles are in first column as shown.}
+		\label{fig:solved_state_agent4}
+	\end{subfigure}
+	\begin{subfigure}[t]{.33\textwidth}
+		\centering
+		\includegraphics[width=0.5\linewidth]{Experiments_and_Results/fig/agents/solved_state_agent5.png}
+		\caption{Fifth configuration is solved when the 2x2 block in the bottom right of the grid is in order as shown.}
+		\label{fig:solved_state_agent5}
+	\end{subfigure}
+	\begin{subfigure}[t]{.33\textwidth}
+		\centering
+		\includegraphics[width=0.5\linewidth]{Experiments_and_Results/fig/agents/solved_state_full.png}
+		\caption{Fully solved puzzle.}
+		\label{fig:solved_state_agent_full}
+	\end{subfigure}
+	\caption{Green tiles can have any value, as long as they don't have the same value as any other tile.}
+	\label{fig:solved_states}
+\end{figure}
+The figures in Figure \ref{fig:solved_states} shows terminal states for each agent, in the order that we will use them, to reach the final state in Figure \ref{fig:solved_state_agent_full}. For ease of referring to the different agents, we name the agent that solves the puzzle of the state in Figure \ref{fig:solved_state_agent1} agent1, the agent of Figure \ref{fig:solved_state_agent2} as agent2, the agent of Figure \ref{fig:solved_state_agent3} as agent3, the agent of Figure \ref{fig:solved_state_agent4} as agent4 and the agent of Figure \ref{fig:solved_state_agent5} as agent5.\\
 
+\noindent The amount of states that we have to look at when solving a puzzle, without breaking it up into different parts is 9! = 362880 states. The optimal policy would be a certain episode, which is a sequence of states, actions and rewards. It would have to be seen multiple times in order for the agent to learn that, that policy is the best one.
+
+When looking at the first configuration that the agent will be trained to solve in Figure \ref{fig:solved_state_agent1}, there are only three unique tiles (blank, number 1 tile and green tiles) and there are 9 possible positions for a single tile. The blank is allowed to slide anywhere it wants according to the sliding puzzle games rules, state in the introduction chapter of this report. This results in a total state number of 9*8*7 = 504 states.
+
+For agents 2,3,4, and 5, the blank is no longer allowed to move anywhere on the grid, it is instead restricted to a 2x3 or 3x2 grid of movements.
+Agent 2 moves the blank, number 2, and  number 3 tiles out of the first column of they are there. It does so by only looking at the second and third row as a 2x3 puzzle to be solved. In other words the blank is only allowed to move in the last two rows as described in the caption of Figure \ref{fig:agent2}. The state-space of agent 2 is 6*5*4 = 120 states.
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.1\linewidth]{Experiments_and_Results/fig/agents/ss_2.png}
+	\caption{Illustrating where the blank tile is allowed to move for agent 2. The blank tile can move into the blue, green, number 2 and 3 tiles, but cannot move into any of the red tiles positions. For the configuration to be solved the blue tiles cannot contain a blank tile, nor a number 2 or 3 tile.}
+	\label{fig:agent2}
+\end{figure}
+Agent 3 works in a 2x3 grid, contained by the last two columns. The terminal state is shown in Figure \ref{fig:agent3}. The terminal state and possible positions the blank tile can move of agent 4 is shown in Figure \ref{fig:agent4}. The number of states of Agent 3 and 4 is the same as Agent 2 which is 120 states.
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.1\linewidth]{Experiments_and_Results/fig/agents/ss_3.png}
+	\caption{Illustrating where the blank tile is allowed to move for agent 3. The blank tile can move into the green, number 2 and 3 tiles, but cannot move into any of the red tiles positions. When the 2 and 3 numbered tiles are placed in the positions as seen in this figure, agent 4 reaches its terminal state.}
+	\label{fig:agent3}
+\end{figure}
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.1\linewidth]{Experiments_and_Results/fig/agents/ss_4.png}
+	\caption{Illustrating where the blank tile is allowed to move for agent 4. The blank tile can move into the green, number 4 and 7 tiles, but cannot move into any of the red tiles positions.}
+	\label{fig:agent4}
+\end{figure}
+
+Agent 5 is only allowed to move the blank tile in the bottom right 4 tiles as shown in Figure \ref{fig:agent5}. There are only 4! = 24 possible states that agent 5 can be in.
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.1\linewidth]{Experiments_and_Results/fig/agents/ss_5.png}
+	\caption{Illustrating where the blank tile is allowed to move for agent 4. The blank tile can move into the green, number 5, 6 and 8 tiles, but cannot move into any of the red tiles positions.}
+	\label{fig:agent5}
+\end{figure}
+ 
+If we use all agents (1 to 5 in ascending order), then the total amount of states that we have is 504+(3*120)+24 = 888 states. This is much smaller than if we had used brute force reinforcement learning, which would require us to deal with 9! = 362880 states for the 3x3 sliding puzzle.
+We will now look at training results of SARSA being applied on the agents.
+\section{SARSA figs}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{Experiments_and_Results/fig/hyperparameters/agent0b/{varying_eps_0.01_0.3_0.45}.pdf}
+	\caption{SARSA episode vs return graph for agent 1, using 100 runs to average. $\epsilon$ is the only hyper parameter varied, with $\gamma=0.99$ and $\alpha=0.1$ kept constant. }
+	\label{fig:varying_eps_0.01_0.3_0.45}
+\end{figure}
+Figure \ref{fig:varying_eps_0.01_0.3_0.45} depicts the results of using SARSA to learn to solve agent 1's problem in the previous section. What we see is that it takes about 150 episodes for the agent the policy to converge. The agent learns best for an epsilon value of 0.01, 
 \section{Q-learning figs}
 
 \section{Discussion}

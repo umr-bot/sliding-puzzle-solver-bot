@@ -3,23 +3,19 @@
 \chapter{Dynamic Programming}
 \label{chap:Dynamic_Programming}
 
-\section{Background}
+Dynamic programming (DP) is a method to solve problems by using a divide and conquer approach \cite{David_Silver}. That is to say a problem is broken into smaller sub-problems and then solved. Dynamic programming is used to solve MPDs of which we have perfect models. Most times, we do not have access to such models and hence DP is of limited use in reinforcement learning. However, DP is still of theoretical importance and a useful component to understanding reinforcement learning \cite{sutton_barto}.
+There are two properties that must be met for a problem to be solvable via DP, namely optimal substructure and overlapping sub-problems\cite{David_Silver}.
+\emph{\textbf{Optimal substructure}} requires that the solution can be decomposed into sub-problems. \emph{\textbf{Overlapping sub-problems}} requires that the sub-problems recur, so that the solution can be cached and reused.
 
-Dynamic programming (DP) is a method to solve problems by using a divide and conquer approach \cite{David_Silver}. That is to say a problem is broken into smaller sub-problems and then solved. Dynamic programming is used to solve MPDs of which we have perfect models. Most times, we do not have access to such models and hence DP is of limited use in reinforcement learning. However, theoretically DP is still important and necessary in reinforcement learning \cite{sutton_barto}.
-There are two properties that must be met for a problem to be solvable via DP: optimal substructure and overlapping sub-problems. \cite{David_Silver}
-\begin{itemize}
-	\item optimal substructure requires that the solution can be decomposed into sub-problems.
-	\item overlapping sub-problems requires that the sub-problems recur, so that the solution can be cached and reused.
-\end{itemize}
-
-Markov decision processes satisfies both of these conditions. The Bellman equation provides a recursive decomposition which fulfills the optimal substructure property. While the value function caches and reuses solutions satisfying the Overlapping sub-problem's condition. \cite{David_Silver}
-The key concept of DP and of reinforcement learning, is to use state-value functions as the structure through which optimal policies are found \cite{sutton_barto}. As a basis to finding the optimal policy, the next section hence discusses how to first evaluate a given policy.
+Markov decision processes satisfy both of these conditions. According to David Silver, the Bellman equation provides a recursive decomposition which fulfills the optimal substructure property, while the value function caches and reuses solutions satisfying the overlapping sub-problem's condition \cite{David_Silver}.
+The key concept of DP, is to use state-value functions as the structure through which optimal policies are found \cite{sutton_barto}. As a basis to finding the optimal policy, the next section first discusses how to evaluate a given policy.
 \section{Policy Evaluation}
-In order to evaluate a given policy, we calculate the state-value function $V_{\pi}$ for a given policy $\pi$. This is called policy evaluation \cite{sutton_barto}.
-From equation \ref{bellmanv2} we know that
+In order to evaluate a given policy, we calculate the state-value function $V_{\pi}$ for a given policy $\pi$. Sutton and Barto names this policy evaluation \cite{sutton_barto}.
+From Equation \ref{bellmanv2} we know that,
 \[
-v_{\pi}(s) = \sum_{a'\in A}\pi(a|s)(R^{a}_s+\gamma\sum_{s'\in S}P^{a}_{ss'}v_\pi(s'))
+v_{\pi}(s) = \sum_{a'\in A}\pi(a|s)(R^{a}_s+\gamma\sum_{s'\in S}P^{a}_{ss'}v_\pi(s')).
 \]
+{\color{red} \huge continue editing from here}
 In order to make it clear how policy evaluation works, we use a diagram inspired by David Silvers lecture series \cite{David_Silver} seen in Figure \ref{fig:iterative_policy_evaluation}.
 Starting at the root node, state s in the diagram in Figure \ref{fig:iterative_policy_evaluation}, the agent can take any action based on its policy $\pi$. After the agent takes this action, the environment responds and moves the agent to state s'. The environments response depends on the probabilities contained in the function $P^{a}_{ss'}$. 
 
